@@ -9,5 +9,5 @@ exports.answerSchema = Joi.object({
       })
     )
     .min(24)
-    .required(), // Exige 24 respostas
+    .required(),
 });

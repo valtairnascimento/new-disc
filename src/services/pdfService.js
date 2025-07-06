@@ -1,71 +1,63 @@
-const fs = require("fs").promises;
-const path = require("path");
+const PDFDocument = require("pdfkit");
 
 exports.generatePDFContent = async (result, profileData) => {
-  const { profile, scores, resultId } = result;
-  const { description, strengths, weaknesses } = profileData;
+  return new Promise((resolve, reject) => {
+    const { profile, primaryLanguage, scores, resultId } = result;
+    const { description, strengths, weaknesses } = profileData;
 
-  // Escapa caracteres especiais para LaTeX
-  const escapeLatex = (str) =>
-    str
-      .replace(/([&%$#_{}])/g, "\\$1")
-      .replace(/\\/g, "\\textbackslash")
-      .replace(/[\n\r]/g, " ");
+    const doc = new PDFDocument({ size: "A4", margin: 50 });
+    const buffers = [];
 
-  // Formata listas para LaTeX
-  const formatList = (items) =>
-    items.map((item) => `\\item ${escapeLatex(item)}`).join("\n");
+    doc.on("data", buffers.push.bind(buffers));
+    doc.on("end", () => {
+      const pdfBuffer = Buffer.concat(buffers);
+      console.log("PDF finalizado, tamanho:", pdfBuffer.length);
+      if (pdfBuffer.length === 0) {
+        reject(new Error("PDF buffer vazio"));
+      } else {
+        resolve(pdfBuffer);
+      }
+    });
+    doc.on("error", (err) => {
+      console.error("Erro ao gerar PDF:", err);
+      reject(err);
+    });
 
-  // Conteúdo LaTeX
-  const latexContent = `
-\\documentclass[a4paper,12pt]{article}
-\\usepackage[utf8]{inputenc}
-\\usepackage[T1]{fontenc}
-\\usepackage{lmodern}
-\\usepackage{geometry}
-\\geometry{margin=2cm}
-\\usepackage{booktabs}
-\\usepackage{enumitem}
-\\usepackage{xcolor}
+    // Cabeçalho
+    doc.fontSize(20).text("Relatório de Perfil", { align: "center" });
+    doc.moveDown(1);
+    doc
+      .fontSize(14)
+      .text(`Perfil: ${profile || primaryLanguage}`, { align: "left" });
+    doc.text(`ID do Resultado: ${resultId}`);
+    doc.text(`Data: ${new Date().toLocaleDateString("pt-BR")}`);
+    doc.moveDown(2);
 
-\\title{Relatório de Perfil DISC}
-\\author{}
-\\date{${new Date().toLocaleDateString("pt-BR")}}
+    // Descrição
+    doc.fontSize(16).text("Descrição do Perfil", { underline: true });
+    doc.moveDown(0.5);
+    doc.fontSize(12).text(description, { align: "justify" });
+    doc.moveDown(2);
 
-\\begin{document}
-\\maketitle
+    // Pontuações
+    doc.fontSize(16).text("Pontuações", { underline: true });
+    doc.moveDown(0.5);
+    Object.keys(scores).forEach((key) => {
+      doc.fontSize(12).text(`${key}: ${scores[key].toFixed(2)}%`);
+    });
+    doc.moveDown(2);
 
-\\section*{Perfil DISC: ${escapeLatex(profile)}}
-\\textbf{ID do Resultado:} ${resultId}\\\\
-\\textbf{Data:} ${new Date().toLocaleDateString("pt-BR")}
+    // Pontos Fortes
+    doc.fontSize(16).text("Pontos Fortes", { underline: true });
+    doc.moveDown(0.5);
+    strengths.forEach((strength) => doc.fontSize(12).text(`• ${strength}`));
+    doc.moveDown(2);
 
-\\section{Descrição do Perfil}
-${escapeLatex(description)}
+    // Áreas de Melhoria
+    doc.fontSize(16).text("Áreas de Melhoria", { underline: true });
+    doc.moveDown(0.5);
+    weaknesses.forEach((weakness) => doc.fontSize(12).text(`• ${weakness}`));
 
-\\section{Pontuações}
-\\begin{tabular}{l c}
-\\toprule
-\\textbf{Traço} & \\textbf{Pontuação (Normalizada)} \\\\
-\\midrule
-Dominância (D) & ${scores.D.toFixed(2)} \\\\
-Influência (I) & ${scores.I.toFixed(2)} \\\\
-Estabilidade (S) & ${scores.S.toFixed(2)} \\\\
-Conformidade (C) & ${scores.C.toFixed(2)} \\\\
-\\bottomrule
-\\end{tabular}
-
-\\section{Pontos Fortes}
-\\begin{itemize}
-${formatList(strengths)}
-\\end{itemize}
-
-\\section{Áreas de Melhoria}
-\\begin{itemize}
-${formatList(weaknesses)}
-\\end{itemize}
-
-\\end{document}
-`;
-
-  return latexContent;
+    doc.end();
+  });
 };

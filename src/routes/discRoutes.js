@@ -80,4 +80,19 @@ router.post("/submit", validate(answerSchema), discController.submitAnswers);
  */
 router.get("/report/:resultId", discController.generateReport);
 
+router.get("/test-pdf", async (req, res) => {
+  const PDFDocument = require("pdfkit");
+  const doc = new PDFDocument();
+  const buffers = [];
+  doc.on("data", buffers.push.bind(buffers));
+  doc.on("end", () => {
+    const pdfBuffer = Buffer.concat(buffers);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=test.pdf");
+    res.send(pdfBuffer);
+  });
+  doc.fontSize(20).text("Teste de PDF", { align: "center" });
+  doc.end();
+});
+
 module.exports = router;

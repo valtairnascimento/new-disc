@@ -5,47 +5,37 @@ const dotenv = require("dotenv");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
 const discRoutes = require("./src/routes/discRoutes");
-const errorHandler = require("./src/middleware/errorHandler");
-const connectDB = require("./src/config/db");
+const loveRoutes = require("./src/routes/loveRoutes");
 
-// Carrega variáveis de ambiente
 dotenv.config();
 
 const app = express();
+app.use(cors());
+app.use(express.json());
 
-// Configuração do Swagger
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "DISC Personality Test API",
+      title: "Teste DISC e Linguagens do Amor API",
       version: "1.0.0",
-      description:
-        "API para teste de personalidade DISC com perfis pré-cadastrados",
     },
-    servers: [{ url: "http://localhost:3000" }],
   },
   apis: ["./routes/*.js"],
 };
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
-
-// Middlewares
-app.use(cors());
-app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// Rotas
 app.use("/api/disc", discRoutes);
+app.use("/api/love-languages", loveRoutes);
 
-// Middleware de erro
-app.use(errorHandler);
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("MongoDB Atlas conectado com sucesso"))
+  .catch((err) => console.error("Erro ao conectar ao MongoDB:", err));
 
-// Conexão com MongoDB Atlas
-connectDB();
-
-// Inicia o servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-  console.log(`Documentação disponível em http://localhost:${PORT}/api-docs`);
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));

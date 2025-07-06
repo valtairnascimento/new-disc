@@ -3,7 +3,7 @@ const Question = require("../models/Question");
 exports.calculateDiscProfile = async (answers) => {
   const scores = { D: 0, I: 0, S: 0, C: 0 };
 
-  // Calcula pontuações por traço
+  // Calcula pontuxações por traço
   for (const answer of answers) {
     const question = await Question.findById(answer.questionId);
     if (!question) {
