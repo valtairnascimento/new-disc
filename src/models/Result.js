@@ -8,6 +8,7 @@ const resultSchema = new mongoose.Schema({
     C: { type: Number, required: true },
   },
   profile: { type: String, required: true },
+  name: { type: String, required: true },
   date: { type: Date, default: Date.now },
 });
 

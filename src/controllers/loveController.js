@@ -1,10 +1,21 @@
 const LoveQuestion = require("../models/loveQuestion");
 const LoveResult = require("../models/loveResult");
+const TestLink = require("../models/TestLink");
 const loveService = require("../services/loveService");
 const pdfService = require("../services/pdfService");
+const crypto = require("crypto");
 
 exports.getLoveQuestions = async (req, res, next) => {
   try {
+    const { token } = req.query;
+    const testLink = await TestLink.findOne({
+      token,
+      testType: "love-languages",
+    });
+    if (!testLink || testLink.expiresAt < new Date()) {
+      throw new Error("Link inválido ou expirado");
+    }
+
     const types = ["Words", "Acts", "Gifts", "Time", "Touch"];
     const questionsPerType = 4;
     let questions = [];
@@ -18,9 +29,7 @@ exports.getLoveQuestions = async (req, res, next) => {
       questions = [...questions, ...typeQuestions];
     }
 
-    // Embaralhar as perguntas para evitar ordem fixa por tipo
     questions = questions.sort(() => Math.random() - 0.5);
-
     res.json(questions);
   } catch (err) {
     console.error("Erro ao buscar perguntas:", err);
@@ -30,7 +39,7 @@ exports.getLoveQuestions = async (req, res, next) => {
 
 exports.submitLoveAnswers = async (req, res, next) => {
   try {
-    const { answers } = req.body;
+    const { answers, name } = req.body;
     const { scores, primaryLanguage } = await loveService.calculateLoveProfile(
       answers
     );
@@ -38,6 +47,7 @@ exports.submitLoveAnswers = async (req, res, next) => {
     const savedResult = await LoveResult.create({
       scores,
       primaryLanguage,
+      name,
       date: new Date(),
     });
 
@@ -86,6 +96,48 @@ exports.generateLoveReport = async (req, res, next) => {
     res.send(pdfBuffer);
   } catch (err) {
     console.error("Erro ao gerar relatório:", err);
+    next(err);
+  }
+};
+
+exports.getLoveResults = async (req, res, next) => {
+  try {
+    const { page = 1, limit = 10, name } = req.query;
+    const query = name ? { name: new RegExp(name, "i") } : {};
+
+    const results = await LoveResult.find(query)
+      .sort({ date: -1 })
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit))
+      .select("name primaryLanguage scores date");
+
+    const total = await LoveResult.countDocuments(query);
+
+    res.json({
+      results,
+      total,
+      pages: Math.ceil(total / limit),
+      currentPage: parseInt(page),
+    });
+  } catch (err) {
+    console.error("Erro ao buscar resultados:", err);
+    next(err);
+  }
+};
+
+exports.createLoveTestLink = async (req, res, next) => {
+  try {
+    const token = crypto.randomBytes(16).toString("hex");
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+    const testLink = await TestLink.create({
+      token,
+      testType: "love-languages",
+      expiresAt,
+    });
+
+    res.json({ link: `http://localhost:3000/test/love-languages/${token}` });
+  } catch (err) {
+    console.error("Erro ao criar link:", err);
     next(err);
   }
 };

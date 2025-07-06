@@ -9,6 +9,7 @@ const loveResultSchema = new mongoose.Schema({
     Touch: { type: Number, required: true },
   },
   primaryLanguage: { type: String, required: true },
+  name: { type: String, required: true },
   date: { type: Date, default: Date.now },
 });
 
