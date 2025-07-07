@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const LoveQuestion = require("./src/models/loveQuestion");
+const LoveProfile = require("./src/models/loveProfile");
 
 const questions = [
   // Palavras de Afirmação - 8 perguntas
@@ -119,25 +120,186 @@ const questions = [
   { text: "O contato físico me faz sentir mais conectado.", type: "Touch" },
 ];
 
-async function seedLoveQuestions() {
+const profiles = [
+  {
+    profile: "Words",
+    description:
+      "Você valoriza palavras gentis, elogios e mensagens carinhosas.",
+    color: "bg-purple-600",
+  },
+  {
+    profile: "Acts",
+    description: "Você se sente amado quando alguém faz algo útil por você.",
+    color: "bg-blue-600",
+  },
+  {
+    profile: "Gifts",
+    description: "Presentes, mesmo simples, são símbolos importantes de afeto.",
+    color: "bg-pink-600",
+  },
+  {
+    profile: "Time",
+    description: "Passar momentos significativos juntos é o que mais importa.",
+    color: "bg-green-600",
+  },
+  {
+    profile: "Touch",
+    description: "Toques físicos, como abraços, fazem você se sentir amado.",
+    color: "bg-red-600",
+  },
+  {
+    profile: "Acts/Gifts",
+    description: "Você aprecia ações práticas e presentes como formas de amor.",
+    color: "bg-blue-500",
+  },
+  {
+    profile: "Acts/Time",
+    description: "Você valoriza ações úteis e momentos compartilhados.",
+    color: "bg-blue-400",
+  },
+  {
+    profile: "Acts/Touch",
+    description: "Você se sente amado por ações práticas e contato físico.",
+    color: "bg-blue-700",
+  },
+  {
+    profile: "Acts/Words",
+    description: "Você aprecia ações úteis e palavras de carinho.",
+    color: "bg-blue-300",
+  },
+  {
+    profile: "Gifts/Acts",
+    description:
+      "Presentes e ações práticas são suas formas preferidas de amor.",
+    color: "bg-pink-500",
+  },
+  {
+    profile: "Gifts/Time",
+    description: "Você valoriza presentes e tempo de qualidade juntos.",
+    color: "bg-pink-400",
+  },
+  {
+    profile: "Gifts/Touch",
+    description: "Presentes e toques físicos são significativos para você.",
+    color: "bg-pink-700",
+  },
+  {
+    profile: "Gifts/Words",
+    description: "Você aprecia presentes e palavras de afirmação.",
+    color: "bg-pink-300",
+  },
+  {
+    profile: "Time/Acts",
+    description: "Tempo de qualidade e ações práticas são suas preferências.",
+    color: "bg-green-500",
+  },
+  {
+    profile: "Time/Gifts",
+    description: "Você valoriza tempo compartilhado e presentes.",
+    color: "bg-green-400",
+  },
+  {
+    profile: "Time/Touch",
+    description:
+      "Tempo de qualidade e toques físicos são importantes para você.",
+    color: "bg-green-700",
+  },
+  {
+    profile: "Time/Words",
+    description: "Você aprecia tempo juntos e palavras de carinho.",
+    color: "bg-green-300",
+  },
+  {
+    profile: "Touch/Acts",
+    description: "Toques físicos e ações práticas fazem você se sentir amado.",
+    color: "bg-red-500",
+  },
+  {
+    profile: "Touch/Gifts",
+    description: "Você valoriza toques físicos e presentes.",
+    color: "bg-red-400",
+  },
+  {
+    profile: "Touch/Time",
+    description: "Toques físicos e tempo de qualidade são suas preferências.",
+    color: "bg-red-700",
+  },
+  {
+    profile: "Touch/Words",
+    description: "Você aprecia toques físicos e palavras de afirmação.",
+    color: "bg-red-300",
+  },
+];
+
+async function seedLoveData() {
   try {
     await mongoose.connect(
       process.env.MONGO_URI ||
-        "mongodb+srv://valtairnjr:12345@newdisc.t9dj4vz.mongodb.net/disc_test?retryWrites=true&w=majority"
+        "mongodb+srv://valtairnjr:12345@newdisc.t9dj4vz.mongodb.net/disc_test?retryWrites=true&w=majority",
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
     );
     console.log("Conectado ao MongoDB Atlas");
 
+    // Validar perguntas
+    const types = ["Words", "Acts", "Gifts", "Time", "Touch"];
+    const questionsByType = questions.reduce((acc, q) => {
+      acc[q.type] = (acc[q.type] || 0) + 1;
+      return acc;
+    }, {});
+    console.log("Contagem de perguntas por tipo:", questionsByType);
+
+    for (const type of types) {
+      if (questionsByType[type] !== 8) {
+        throw new Error(
+          `Número inválido de perguntas para o tipo ${type}: esperado 8, encontrado ${questionsByType[type]}`
+        );
+      }
+    }
+
+    // Validar perfis
+    const expectedProfiles = 21;
+    if (profiles.length !== expectedProfiles) {
+      throw new Error(
+        `Número inválido de perfis: esperado ${expectedProfiles}, encontrado ${profiles.length}`
+      );
+    }
+
+    // Limpar coleções
     await LoveQuestion.deleteMany({});
     console.log("Coleção LoveQuestion limpa");
+    await LoveProfile.deleteMany({});
+    console.log("Coleção LoveProfile limpa");
 
-    await LoveQuestion.insertMany(questions);
-    console.log("40 perguntas inseridas com sucesso");
+    // Inserir perguntas e perfis
+    const insertedQuestions = await LoveQuestion.insertMany(questions);
+    console.log(`Inseridas ${insertedQuestions.length} perguntas com sucesso`);
+    const insertedProfiles = await LoveProfile.insertMany(profiles);
+    console.log(`Inseridos ${insertedProfiles.length} perfis com sucesso`);
 
-    mongoose.connection.close();
+    // Verificar inserções
+    const questionCountByType = await LoveQuestion.aggregate([
+      { $group: { _id: "$type", count: { $sum: 1 } } },
+    ]);
+    console.log("Verificação de perguntas após inserção:", questionCountByType);
+
+    const profileCount = await LoveProfile.countDocuments();
+    console.log("Verificação de perfis após inserção:", {
+      totalProfiles: profileCount,
+    });
+
+    // Fechar a conexão
+    await mongoose.connection.close();
     console.log("Conexão com MongoDB fechada");
   } catch (err) {
-    console.error("Erro ao popular perguntas:", err);
+    console.error("Erro ao popular dados:", {
+      message: err.message,
+      stack: err.stack,
+    });
+    process.exit(1);
   }
 }
 
-seedLoveQuestions();
+seedLoveData();

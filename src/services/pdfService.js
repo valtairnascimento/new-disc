@@ -1,64 +1,70 @@
 const PDFDocument = require("pdfkit");
 
 exports.generatePDFContent = async (result, profileData) => {
-  return new Promise((resolve, reject) => {
-    const { profile, primaryLanguage, scores, resultId, name } = result;
-    const { description, strengths, weaknesses } = profileData;
+  try {
+    console.log("Gerando PDF para resultado:", result);
+    console.log("Dados do perfil:", profileData);
 
-    console.log("Gerando PDF para:", {
-      resultId,
-      name,
-      profile,
-      primaryLanguage,
-    });
+    // Validação inicial
+    if (!result || !profileData) {
+      throw new Error("Resultado ou dados do perfil ausentes");
+    }
+    if (!result.name || !result.date) {
+      throw new Error("Nome ou data ausentes no resultado");
+    }
 
-    const doc = new PDFDocument({ size: "A4", margin: 50 });
+    const scores = result.scores;
+    if (!scores || typeof scores !== "object") {
+      throw new Error("Scores ausentes ou em formato inválido");
+    }
+
+    const profile = result.profile || result.primaryLanguage || "Desconhecido";
+    const description = profileData.description || "Sem descrição disponível";
+
+    const doc = new PDFDocument();
     const buffers = [];
 
-    doc.on("data", buffers.push.bind(buffers));
-    doc.on("end", () => {
-      const pdfBuffer = Buffer.concat(buffers);
-      console.log("PDF finalizado, tamanho:", pdfBuffer.length);
-      if (pdfBuffer.length === 0) {
-        reject(new Error("PDF buffer vazio"));
-      } else {
-        resolve(pdfBuffer);
-      }
+    doc.on("data", (chunk) => buffers.push(chunk));
+
+    return new Promise((resolve, reject) => {
+      doc.on("end", () => {
+        console.log("PDF finalizado");
+        resolve(Buffer.concat(buffers));
+      });
+
+      doc.on("error", (err) => {
+        console.error("Erro durante a criação do PDF:", err);
+        reject(err);
+      });
+
+      // Conteúdo do PDF
+      doc.fontSize(20).text("Relatório de Resultado", { align: "center" });
+      doc.moveDown();
+
+      doc.fontSize(16).text(`Nome: ${result.name}`);
+      doc
+        .fontSize(16)
+        .text(`Data: ${new Date(result.date).toLocaleDateString()}`);
+      doc.moveDown();
+
+      doc.fontSize(16).text(`Perfil: ${profile}`);
+      doc.fontSize(12).text(`Descrição: ${description}`);
+      doc.moveDown();
+
+      doc.fontSize(14).text("Distribuição das Respostas:");
+      Object.entries(scores).forEach(([key, value]) => {
+        doc.fontSize(12).text(`${key}: ${value}`);
+      });
+
+      doc.end();
     });
-    doc.on("error", (err) => {
-      console.error("Erro ao gerar PDF:", err);
-      reject(err);
+  } catch (err) {
+    console.error("Erro ao gerar PDF:", {
+      message: err.message,
+      stack: err.stack,
+      result,
+      profileData,
     });
-
-    doc.fontSize(20).text("Relatório de Perfil", { align: "center" });
-    doc.moveDown(1);
-    doc.fontSize(14).text(`Nome: ${name}`, { align: "left" });
-    doc.text(`Perfil: ${profile || primaryLanguage}`, { align: "left" });
-    doc.text(`ID do Resultado: ${resultId}`);
-    doc.text(`Data: ${new Date().toLocaleDateString("pt-BR")}`);
-    doc.moveDown(2);
-
-    doc.fontSize(16).text("Descrição do Perfil", { underline: true });
-    doc.moveDown(0.5);
-    doc.fontSize(12).text(description, { align: "justify" });
-    doc.moveDown(2);
-
-    doc.fontSize(16).text("Pontuações", { underline: true });
-    doc.moveDown(0.5);
-    Object.keys(scores).forEach((key) => {
-      doc.fontSize(12).text(`${key}: ${scores[key].toFixed(2)}%`);
-    });
-    doc.moveDown(2);
-
-    doc.fontSize(16).text("Pontos Fortes", { underline: true });
-    doc.moveDown(0.5);
-    strengths.forEach((strength) => doc.fontSize(12).text(`• ${strength}`));
-    doc.moveDown(2);
-
-    doc.fontSize(16).text("Áreas de Melhoria", { underline: true });
-    doc.moveDown(0.5);
-    weaknesses.forEach((weakness) => doc.fontSize(12).text(`• ${weakness}`));
-
-    doc.end();
-  });
+    throw err;
+  }
 };

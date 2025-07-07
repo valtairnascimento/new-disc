@@ -5,6 +5,7 @@ const profileSchema = new mongoose.Schema({
   description: { type: String, required: true },
   strengths: { type: [String], default: [] },
   weaknesses: { type: [String], default: [] },
+  color: { type: String },
 });
 
 module.exports = mongoose.model("Profile", profileSchema);

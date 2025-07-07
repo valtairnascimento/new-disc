@@ -33,7 +33,7 @@ Crie um arquivo `.env` na raiz com:
 
 ```env
 MONGO_URI=mongodb://localhost:27017/disc_test
-PORT=3000
+PORT=5000
 ```
 
 Inicie o servidor:
@@ -47,7 +47,7 @@ npm start
 ## 📡 Uso da API
 
 Acesse a documentação da API via Swagger:  
-📄 [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+📄 [http://localhost:5000/api-docs](http://localhost:5000/api-docs)
 
 ### Endpoints principais:
 

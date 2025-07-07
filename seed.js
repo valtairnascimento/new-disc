@@ -63,29 +63,222 @@ const questions = [
 const profiles = [
   {
     profile: "D",
-    description: "Você é dominante, confiante e orientado a resultados.",
-    strengths: ["Liderança", "Decisão rápida"],
-    weaknesses: ["Impaciência", "Falta de empatia"],
+    description:
+      "Você é dominante, confiante e orientado a resultados, focado em alcançar objetivos com determinação.",
+    strengths: [
+      "Liderança",
+      "Decisão rápida",
+      "Iniciativa",
+      "Resolução de problemas",
+    ],
+    weaknesses: [
+      "Impaciência",
+      "Falta de empatia",
+      "Tendência a ser autoritário",
+    ],
+    color: "bg-red-600",
   },
   {
     profile: "I",
-    description: "Você é influente, carismático e comunicativo.",
-    strengths: ["Persuasão", "Entusiasmo"],
-    weaknesses: ["Falta de foco", "Impulsividade"],
+    description:
+      "Você é influente, carismático e comunicativo, inspirando outros com entusiasmo e energia.",
+    strengths: ["Persuasão", "Entusiasmo", "Habilidade social", "Motivação"],
+    weaknesses: ["Falta de foco", "Impulsividade", "Desorganização"],
+    color: "bg-yellow-600",
   },
   {
     profile: "S",
-    description: "Você é estável, paciente e colaborativo.",
-    strengths: ["Empatia", "Consistência"],
-    weaknesses: ["Resistência a mudanças", "Passividade"],
+    description:
+      "Você é estável, paciente e colaborativo, valorizando harmonia e consistência no ambiente.",
+    strengths: ["Empatia", "Consistência", "Colaboração", "Paciência"],
+    weaknesses: ["Resistência a mudanças", "Passividade", "Evita confrontos"],
+    color: "bg-green-600",
   },
   {
     profile: "C",
-    description: "Você é analítico, detalhista e meticuloso.",
-    strengths: ["Precisão", "Organização"],
-    weaknesses: ["Perfeccionismo", "Rigidez"],
+    description:
+      "Você é analítico, detalhista e meticuloso, priorizando precisão e qualidade no trabalho.",
+    strengths: [
+      "Precisão",
+      "Organização",
+      "Análise crítica",
+      "Atenção aos detalhes",
+    ],
+    weaknesses: ["Perfeccionismo", "Rigidez", "Dificuldade em delegar"],
+    color: "bg-blue-600",
   },
-  // Adicione mais perfis conforme necessário
+  {
+    profile: "DI",
+    description:
+      "Você combina dominância com influência, sendo assertivo e carismático, liderando com entusiasmo.",
+    strengths: [
+      "Liderança inspiradora",
+      "Tomada de decisão rápida",
+      "Habilidade social",
+    ],
+    weaknesses: [
+      "Impaciência com detalhes",
+      "Tendência a ser impulsivo",
+      "Foco excessivo em resultados",
+    ],
+    color: "bg-red-500",
+  },
+  {
+    profile: "DS",
+    description:
+      "Você é dominante com um toque de estabilidade, liderando com firmeza, mas valorizando harmonia.",
+    strengths: ["Liderança estável", "Resolução de conflitos", "Determinação"],
+    weaknesses: [
+      "Resistência a mudanças rápidas",
+      "Autoritário em excesso",
+      "Falta de flexibilidade",
+    ],
+    color: "bg-red-400",
+  },
+  {
+    profile: "DC",
+    description:
+      "Você combina dominância com conformidade, sendo assertivo, mas focado em precisão e padrões elevados.",
+    strengths: [
+      "Liderança analítica",
+      "Foco em resultados de qualidade",
+      "Decisão estruturada",
+    ],
+    weaknesses: [
+      "Perfeccionismo",
+      "Tendência a ser crítico",
+      "Dificuldade em delegar",
+    ],
+    color: "bg-red-700",
+  },
+  {
+    profile: "ID",
+    description:
+      "Você é influente com traços de dominância, comunicativo e assertivo, motivando com energia.",
+    strengths: [
+      "Persuasão carismática",
+      "Iniciativa social",
+      "Motivação de equipes",
+    ],
+    weaknesses: [
+      "Impulsividade",
+      "Falta de atenção aos detalhes",
+      "Desorganização",
+    ],
+    color: "bg-yellow-500",
+  },
+  {
+    profile: "IS",
+    description:
+      "Você combina influência com estabilidade, sendo sociável, mas buscando harmonia e colaboração.",
+    strengths: ["Habilidade social", "Colaboração amigável", "Empatia"],
+    weaknesses: [
+      "Evita confrontos",
+      "Falta de foco em resultados",
+      "Resistência a mudanças",
+    ],
+    color: "bg-yellow-400",
+  },
+  {
+    profile: "IC",
+    description:
+      "Você é influente com conformidade, comunicativo, mas atento a detalhes e padrões.",
+    strengths: [
+      "Comunicação estruturada",
+      "Persuasão analítica",
+      "Organização social",
+    ],
+    weaknesses: [
+      "Perfeccionismo em apresentações",
+      "Indecisão em conflitos",
+      "Foco excessivo em detalhes",
+    ],
+    color: "bg-yellow-700",
+  },
+  {
+    profile: "SD",
+    description:
+      "Você é estável com traços de dominância, colaborativo, mas capaz de liderar quando necessário.",
+    strengths: [
+      "Liderança colaborativa",
+      "Paciência em conflitos",
+      "Estabilidade",
+    ],
+    weaknesses: [
+      "Resistência a mudanças rápidas",
+      "Passividade excessiva",
+      "Evita riscos",
+    ],
+    color: "bg-green-500",
+  },
+  {
+    profile: "SI",
+    description:
+      "Você combina estabilidade com influência, sendo paciente e sociável, promovendo harmonia.",
+    strengths: ["Empatia social", "Colaboração harmoniosa", "Escuta ativa"],
+    weaknesses: [
+      "Falta de assertividade",
+      "Evita confrontos",
+      "Resistência a mudanças",
+    ],
+    color: "bg-green-400",
+  },
+  {
+    profile: "SC",
+    description:
+      "Você é estável com conformidade, valorizando harmonia e precisão em processos estruturados.",
+    strengths: [
+      "Organização colaborativa",
+      "Paciência meticulosa",
+      "Foco em qualidade",
+    ],
+    weaknesses: [
+      "Perfeccionismo",
+      "Resistência a mudanças",
+      "Dificuldade em decidir rapidamente",
+    ],
+    color: "bg-green-700",
+  },
+  {
+    profile: "CD",
+    description:
+      "Você combina conformidade com dominância, sendo analítico, mas assertivo na busca por resultados.",
+    strengths: [
+      "Precisão assertiva",
+      "Análise crítica",
+      "Foco em resultados estruturados",
+    ],
+    weaknesses: ["Tendência a ser crítico", "Rigidez", "Impaciência com erros"],
+    color: "bg-blue-500",
+  },
+  {
+    profile: "CI",
+    description:
+      "Você é analítico com influência, combinando atenção aos detalhes com habilidades sociais.",
+    strengths: [
+      "Comunicação analítica",
+      "Persuasão estruturada",
+      "Organização",
+    ],
+    weaknesses: [
+      "Perfeccionismo social",
+      "Indecisão em conflitos",
+      "Foco excessivo em detalhes",
+    ],
+    color: "bg-blue-400",
+  },
+  {
+    profile: "CS",
+    description:
+      "Você combina conformidade com estabilidade, sendo meticuloso e buscando harmonia em processos.",
+    strengths: [
+      "Precisão colaborativa",
+      "Paciência analítica",
+      "Foco em qualidade",
+    ],
+    weaknesses: ["Perfeccionismo", "Resistência a mudanças", "Evita riscos"],
+    color: "bg-blue-700",
+  },
 ];
 
 async function seedDB() {
@@ -104,7 +297,7 @@ async function seedDB() {
     console.log("48 perguntas inseridas com sucesso");
 
     await Profile.insertMany(profiles);
-    console.log("Perfis pré-cadastrados inseridos com sucesso");
+    console.log("16 perfis pré-cadastrados inseridos com sucesso");
 
     mongoose.connection.close();
     console.log("Conexão com MongoDB fechada");

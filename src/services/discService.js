@@ -2,40 +2,42 @@ const Question = require("../models/Question");
 
 exports.calculateDiscProfile = async (answers) => {
   const scores = { D: 0, I: 0, S: 0, C: 0 };
+  const validTypes = ["D", "I", "S", "C"];
 
-  // Calcula pontuxações por traço
-  for (const answer of answers) {
-    const question = await Question.findById(answer.questionId);
+  for (const { questionId, value } of answers) {
+    const question = await Question.findById(questionId);
     if (!question) {
-      throw new Error(`Pergunta com ID ${answer.questionId} não encontrada`);
+      throw new Error(`Questão com ID ${questionId} não encontrada`);
     }
-    scores[question.type] += answer.value;
+    if (!validTypes.includes(question.type)) {
+      throw new Error(
+        `Tipo de questão inválido: ${question.type} para questão ${questionId}`
+      );
+    }
+    scores[question.type] += value;
   }
 
-  // Normaliza pontuações (opcional, para comparar com testes padrão)
-  const totalQuestionsPerTrait = answers.length / 4; // Assume 6 perguntas por traço
-  const normalizedScores = {
-    D: scores.D / totalQuestionsPerTrait,
-    I: scores.I / totalQuestionsPerTrait,
-    S: scores.S / totalQuestionsPerTrait,
-    C: scores.C / totalQuestionsPerTrait,
-  };
+  const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const primaryProfile = sortedScores[0][0];
+  const secondaryProfile = sortedScores[1][0];
+  const maxScore = sortedScores[0][1];
+  const secondScore = sortedScores[1][1];
 
-  // Determina traço primário e secundário
-  const sortedScores = Object.entries(normalizedScores).sort(
-    (a, b) => b[1] - a[1]
-  );
-  const primaryTrait = sortedScores[0][0];
-  const secondaryTrait = sortedScores[1][1] > 0 ? sortedScores[1][0] : null;
+  let profile;
+  if (maxScore === sortedScores[1][1]) {
+    const primary =
+      sortedScores[0][0] < sortedScores[1][0]
+        ? sortedScores[0][0]
+        : sortedScores[1][0];
+    profile = primary;
+  } else {
+    profile =
+      secondScore >= maxScore * 0.2
+        ? `${primaryProfile}${secondaryProfile}`
+        : primaryProfile;
+  }
 
-  // Define o perfil (primário ou combinação)
-  const profile =
-    secondaryTrait && sortedScores[1][1] > 2.5
-      ? `${primaryTrait}${secondaryTrait}`
-      : primaryTrait;
+  console.log("Scores calculados:", scores, "Perfil selecionado:", profile);
 
-  return {
-    profile,
-    scores: normalizedScores,
-  };
+  return { profile, scores };
 };

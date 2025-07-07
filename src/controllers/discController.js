@@ -2,9 +2,29 @@ const Question = require("../models/Question");
 const Result = require("../models/Result");
 const Profile = require("../models/Profile");
 const TestLink = require("../models/TestLink");
+
 const discService = require("../services/discService");
 const pdfService = require("../services/pdfService");
 const crypto = require("crypto");
+
+const profileNameMap = {
+  D: "Dominante",
+  I: "Influente",
+  S: "Estável",
+  C: "Consciente",
+  DI: "Dominante/Influente",
+  DS: "Dominante/Estável",
+  DC: "Dominante/Consciente",
+  ID: "Influente/Dominante",
+  IS: "Influente/Estável",
+  IC: "Influente/Consciente",
+  SD: "Estável/Dominante",
+  SI: "Estável/Influente",
+  SC: "Estável/Consciente",
+  CD: "Consciente/Dominante",
+  CI: "Consciente/Influente",
+  CS: "Consciente/Estável",
+};
 
 exports.getQuestions = async (req, res, next) => {
   try {
@@ -28,38 +48,68 @@ exports.getQuestions = async (req, res, next) => {
     }
 
     questions = questions.sort(() => Math.random() - 0.5);
+    console.log(
+      "Perguntas enviadas:",
+      questions.map((q) => ({ id: q._id, type: q.type }))
+    );
     res.json(questions);
   } catch (err) {
     console.error("Erro ao buscar perguntas:", err);
-    next(err);
+    res.status(500).json({ error: err.message });
   }
 };
 
 exports.submitAnswers = async (req, res, next) => {
   try {
-    const { answers, name } = req.body;
+    const { answers, name, token } = req.body;
+    console.log("Token recebido:", token);
+    console.log("Respostas recebidas:", answers);
+    console.log("Nome recebido:", name);
+    const testLink = await TestLink.findOne({ token, testType: "disc" });
+    console.log("TestLink encontrado:", testLink);
+
+    if (!testLink) {
+      throw new Error("Link inválido");
+    }
+    if (testLink.expiresAt < new Date()) {
+      throw new Error("Link expirado");
+    }
+    if (testLink.used) {
+      throw new Error("Link já utilizado");
+    }
+
     const { profile, scores } = await discService.calculateDiscProfile(answers);
+    console.log("Perfil calculado:", profile, "Scores:", scores);
 
     const profileData = await Profile.findOne({ profile });
     if (!profileData) {
-      throw new Error("Perfil não encontrado");
+      throw new Error(`Perfil não encontrado: ${profile}`);
     }
 
     const savedResult = await Result.create({
       scores,
-      profile,
-      name,
+      profile: profileData.profile,
+      name: name || testLink.testName,
       date: new Date(),
+      status: "completed",
     });
 
+    testLink.used = true;
+    await testLink.save();
+
     res.json({
-      profile,
+      profile: profileNameMap[profile] || profile,
       scores,
       description: profileData.description,
-      resultId: savedResult._id,
+      resultId: savedResult._id.toString(),
     });
   } catch (err) {
-    next(err);
+    console.error("Erro ao submeter teste:", {
+      message: err.message,
+      stack: err.stack,
+      body: req.body,
+    });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -68,21 +118,12 @@ exports.generateReport = async (req, res, next) => {
     const { resultId } = req.params;
     console.log("Gerando relatório para resultId:", resultId);
     const result = await Result.findById(resultId);
-    if (!result) {
-      console.log("Resultado não encontrado:", resultId);
-      throw new Error("Resultado não encontrado");
-    }
+    if (!result) throw new Error("Resultado não encontrado");
 
-    console.log("Resultado encontrado:", result);
     const profileData = await Profile.findOne({ profile: result.profile });
-    if (!profileData) {
-      console.log("Perfil não encontrado:", result.profile);
-      throw new Error("Perfil não encontrado");
-    }
+    if (!profileData) throw new Error("Perfil não encontrado");
 
-    console.log("Gerando PDF...");
     const pdfBuffer = await pdfService.generatePDFContent(result, profileData);
-    console.log("PDF gerado, tamanho:", pdfBuffer.length);
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
@@ -92,14 +133,21 @@ exports.generateReport = async (req, res, next) => {
     res.send(pdfBuffer);
   } catch (err) {
     console.error("Erro ao gerar relatório:", err);
-    next(err);
+    res.status(500).json({ error: err.message });
   }
 };
 
 exports.getResults = async (req, res, next) => {
   try {
-    const { page = 1, limit = 10, name } = req.query;
-    const query = name ? { name: new RegExp(name, "i") } : {};
+    const { page = 1, limit = 10, name, profile } = req.query;
+    const query = {};
+    if (name) query.name = new RegExp(name, "i");
+    if (profile && profile !== "all") {
+      const profileKey = Object.keys(profileNameMap).find(
+        (key) => profileNameMap[key] === profile
+      );
+      if (profileKey) query.profile = profileKey;
+    }
 
     const results = await Result.find(query)
       .sort({ date: -1 })
@@ -107,34 +155,92 @@ exports.getResults = async (req, res, next) => {
       .limit(parseInt(limit))
       .select("name profile scores date");
 
+    const profiles = await Profile.find({
+      profile: { $in: results.map((r) => r.profile) },
+    });
+    const profileColorMap = profiles.reduce((map, p) => {
+      map[p.profile] = p.color;
+      return map;
+    }, {});
+
+    const formattedResults = results.map((result) => ({
+      ...result._doc,
+      _id: result._id.toString(),
+      profile: profileNameMap[result.profile] || result.profile,
+      profileColor: profileColorMap[result.profile] || "bg-gray-600",
+      status: result.status || "completed",
+    }));
+
     const total = await Result.countDocuments(query);
 
     res.json({
-      results,
+      results: formattedResults,
       total,
       pages: Math.ceil(total / limit),
       currentPage: parseInt(page),
     });
   } catch (err) {
     console.error("Erro ao buscar resultados:", err);
-    next(err);
+    res.status(500).json({ error: "Erro ao buscar resultados" });
   }
 };
 
 exports.createTestLink = async (req, res, next) => {
   try {
+    const { testName } = req.body;
+    if (!testName) {
+      return res.status(400).json({ error: "Nome do usuário é obrigatório" });
+    }
     const token = crypto.randomBytes(16).toString("hex");
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
     const testLink = await TestLink.create({
       token,
       testType: "disc",
+      testName,
       expiresAt,
+      used: false,
     });
 
     res.json({ link: `http://localhost:3000/test/disc/${token}` });
   } catch (err) {
     console.error("Erro ao criar link:", err);
-    next(err);
+    res.status(500).json({ error: "Erro ao criar link" });
+  }
+};
+
+exports.getTestLink = async (req, res, next) => {
+  try {
+    const { token } = req.query;
+    const testLink = await TestLink.findOne({ token, testType: "disc" });
+    if (!testLink || testLink.expiresAt < new Date()) {
+      throw new Error("Link inválido ou expirado");
+    }
+    res.json({ testName: testLink.testName });
+  } catch (err) {
+    console.error("Erro ao buscar link:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getResultById = async (req, res, next) => {
+  try {
+    const { resultId } = req.params;
+    const result = await Result.findById(resultId);
+    if (!result) throw new Error("Resultado não encontrado");
+
+    const profileData = await Profile.findOne({ profile: result.profile });
+
+    res.json({
+      name: result.name,
+      profile: profileNameMap[result.profile] || result.profile,
+      scores: result.scores,
+      date: result.date,
+      description: profileData?.description,
+      status: result.status || "completed",
+    });
+  } catch (err) {
+    console.error("Erro ao buscar resultado:", err);
+    res.status(500).json({ error: err.message });
   }
 };
