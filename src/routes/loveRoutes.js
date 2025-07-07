@@ -7,5 +7,7 @@ router.post("/create-link", loveController.createLoveTestLink);
 router.get("/link", loveController.getLoveTestLink);
 router.post("/submit", loveController.submitLoveAnswers);
 router.get("/report/:resultId", loveController.generateLoveReport);
+router.get("/results", loveController.getLoveResults);
+router.get("/result/:resultId", loveController.getResultById);
 
 module.exports = router;

@@ -6,4 +6,8 @@ const loveProfileSchema = new mongoose.Schema({
   color: { type: String, required: true },
 });
 
-module.exports = mongoose.model("LoveProfile", loveProfileSchema);
+module.exports = mongoose.model(
+  "LoveProfile",
+  loveProfileSchema,
+  "loveprofiles"
+);

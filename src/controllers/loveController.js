@@ -5,6 +5,7 @@ const TestLink = require("../models/TestLink");
 const loveService = require("../services/loveService");
 const pdfService = require("../services/pdfService");
 const crypto = require("crypto");
+const mongoose = require("mongoose");
 
 const profileNameMap = {
   Words: "Palavras de Afirmação",
@@ -30,26 +31,16 @@ const profileNameMap = {
   "Touch/Words": "Toque Físico/Palavras de Afirmação",
 };
 
-exports.getLoveQuestions = async (req, res, next) => {
+exports.getLoveQuestions = async (req, res) => {
   try {
     const { token } = req.query;
-    console.log("Buscando perguntas para token:", token);
     const testLink = await TestLink.findOne({
       token,
       testType: "love-languages",
     });
-    if (!testLink) {
-      console.log("Token não encontrado:", token);
-      throw new Error("Link inválido");
-    }
-    if (testLink.expiresAt < new Date()) {
-      console.log("Token expirado:", token, "ExpiresAt:", testLink.expiresAt);
-      throw new Error("Link expirado");
-    }
-    if (testLink.used) {
-      console.log("Token já utilizado:", token);
-      throw new Error("Link já utilizado");
-    }
+    if (!testLink) throw new Error("Link inválido");
+    if (testLink.expiresAt < new Date()) throw new Error("Link expirado");
+    if (testLink.used) throw new Error("Link já utilizado");
 
     const types = ["Words", "Acts", "Gifts", "Time", "Touch"];
     const questionsPerType = 4;
@@ -65,149 +56,93 @@ exports.getLoveQuestions = async (req, res, next) => {
     }
 
     questions = questions.sort(() => Math.random() - 0.5);
-    console.log(
-      "Perguntas enviadas:",
-      questions.map((q) => ({ id: q._id, type: q.type }))
-    );
     res.json(questions);
   } catch (err) {
-    console.error("Erro ao buscar perguntas:", {
-      message: err.message,
-      stack: err.stack,
-      token: req.query.token,
-    });
+    console.error("Erro ao buscar perguntas:", err);
     res.status(500).json({ error: err.message });
   }
 };
 
-exports.submitLoveAnswers = async (req, res, next) => {
+exports.submitLoveAnswers = async (req, res) => {
   try {
     const { answers, name, token } = req.body;
-    console.log("Recebendo respostas:", { token, name, answers });
 
-    // Validar entrada
     if (!answers || !Array.isArray(answers) || answers.length !== 20) {
       throw new Error("Deve fornecer exatamente 20 respostas");
     }
-    if (!token) {
-      throw new Error("Token é obrigatório");
-    }
-    if (!name) {
-      throw new Error("Nome é obrigatório");
-    }
+    if (!token) throw new Error("Token é obrigatório");
+    if (!name) throw new Error("Nome é obrigatório");
 
-    // Verificar o TestLink
     const testLink = await TestLink.findOne({
       token,
       testType: "love-languages",
     });
-    console.log("TestLink encontrado:", testLink);
-    if (!testLink) {
-      throw new Error("Link inválido");
-    }
-    if (testLink.expiresAt < new Date()) {
-      throw new Error("Link expirado");
-    }
-    if (testLink.used) {
-      throw new Error("Link já utilizado");
-    }
+    if (!testLink) throw new Error("Link inválido");
+    if (testLink.expiresAt < new Date()) throw new Error("Link expirado");
+    if (testLink.used) throw new Error("Link já utilizado");
 
-    // Calcular o perfil
-    console.log("Calculando perfil com loveService...");
     const { scores, primaryLanguage } = await loveService.calculateLoveProfile(
       answers
     );
-    console.log("Perfil calculado:", { primaryLanguage, scores });
 
-    // Buscar o perfil no banco
-    console.log("Buscando perfil no LoveProfile:", primaryLanguage);
-    const profileData = await LoveProfile.findOne({
-      profile: profileNameMap[primaryLanguage] || primaryLanguage,
-    });
+    const profileData = await LoveProfile.findOne({ profile: primaryLanguage });
+
     if (!profileData) {
-      console.error("Perfil não encontrado no banco:", primaryLanguage);
       throw new Error(`Perfil não encontrado: ${primaryLanguage}`);
     }
-    console.log("Perfil encontrado:", profileData);
 
-    // Salvar o resultado
-    console.log("Salvando resultado no LoveResult...");
     const savedResult = await LoveResult.create({
       scores,
-      primaryLanguage: profileNameMap[primaryLanguage] || primaryLanguage,
+      primaryLanguage,
       name,
       date: new Date(),
       status: "completed",
     });
-    console.log("Resultado salvo:", savedResult);
 
-    // Marcar o link como usado
     testLink.used = true;
     await testLink.save();
-    console.log("TestLink marcado como usado:", testLink);
 
-    // Enviar resposta
-    res.json({
-      primaryLanguage: profileNameMap[primaryLanguage] || primaryLanguage,
-      scores,
-      description: profileData.description,
-      resultId: savedResult._id.toString(),
-    });
+    try {
+      res.json({
+        primaryLanguage: profileNameMap[primaryLanguage] || primaryLanguage,
+        scores,
+        description: profileData.description,
+        resultId: savedResult._id.toString(),
+      });
+    } catch (error) {
+      console.error("❌ Erro ao enviar resposta JSON:", {
+        error: error.message,
+        profileData,
+        savedResult,
+      });
+      res
+        .status(500)
+        .json({ error: "Erro ao processar a resposta do servidor." });
+    }
   } catch (err) {
-    console.error("Erro ao submeter teste:", {
-      message: err.message,
-      stack: err.stack,
-      body: req.body,
-    });
-    next(err);
+    console.error("Erro ao submeter teste:", err);
+    res.status(500).json({ error: err.message });
   }
 };
 
-exports.generateLoveReport = async (req, res, next) => {
+exports.generateLoveReport = async (req, res) => {
   try {
     const { resultId } = req.params;
-    console.log("Gerando relatório para resultId:", resultId);
-
-    // Validar resultId
     if (!resultId || !mongoose.isValidObjectId(resultId)) {
       throw new Error("ID de resultado inválido");
     }
 
-    // Buscar o resultado
     const result = await LoveResult.findById(resultId);
-    if (!result) {
-      console.error(`Resultado não encontrado: ${resultId}`);
-      throw new Error("Resultado não encontrado");
-    }
-    console.log("Resultado encontrado:", result);
+    if (!result) throw new Error("Resultado não encontrado");
 
-    // Validar scores
-    if (
-      !result.scores ||
-      typeof result.scores !== "object" ||
-      Object.keys(result.scores).length === 0
-    ) {
-      console.error("Scores inválidos ou ausentes:", result.scores);
-      throw new Error("Dados de scores inválidos");
-    }
-
-    // Buscar o perfil
-    console.log("Buscando perfil no LoveProfile:", result.primaryLanguage);
     const profileData = await LoveProfile.findOne({
       profile: result.primaryLanguage,
     });
-    if (!profileData) {
-      console.error(`Perfil não encontrado: ${result.primaryLanguage}`);
+    if (!profileData)
       throw new Error(`Perfil não encontrado: ${result.primaryLanguage}`);
-    }
-    console.log("Perfil encontrado:", profileData);
 
-    // Gerar PDF
-    console.log("Gerando PDF com pdfService...");
     const pdfBuffer = await pdfService.generatePDFContent(result, profileData);
-    console.log("PDF gerado com sucesso");
 
-    // Enviar PDF
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
@@ -215,16 +150,12 @@ exports.generateLoveReport = async (req, res, next) => {
     );
     res.send(pdfBuffer);
   } catch (err) {
-    console.error("Erro ao gerar relatório:", {
-      message: err.message,
-      stack: err.stack,
-      resultId: req.params.resultId,
-    });
+    console.error("Erro ao gerar relatório:", err);
     res.status(500).json({ error: err.message });
   }
 };
 
-exports.getLoveResults = async (req, res, next) => {
+exports.getLoveResults = async (req, res) => {
   try {
     const { page = 1, limit = 10, name, profile } = req.query;
     const query = {};
@@ -245,6 +176,7 @@ exports.getLoveResults = async (req, res, next) => {
     const profiles = await LoveProfile.find({
       profile: { $in: results.map((r) => r.primaryLanguage) },
     });
+
     const profileColorMap = profiles.reduce((map, p) => {
       map[p.profile] = p.color;
       return map;
@@ -272,7 +204,7 @@ exports.getLoveResults = async (req, res, next) => {
   }
 };
 
-exports.createLoveTestLink = async (req, res, next) => {
+exports.createLoveTestLink = async (req, res) => {
   try {
     const { testName } = req.body;
     if (!testName) {
@@ -280,10 +212,7 @@ exports.createLoveTestLink = async (req, res, next) => {
     }
     const token = crypto.randomBytes(16).toString("hex");
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
-    console.log("Inserindo link para teste: love-languages", {
-      testName,
-      token,
-    });
+
     const testLink = await TestLink.create({
       token,
       testType: "love-languages",
@@ -291,41 +220,52 @@ exports.createLoveTestLink = async (req, res, next) => {
       expiresAt,
       used: false,
     });
-    console.log("Link criado com sucesso:", testLink);
+
     res.json({ link: `http://localhost:3000/test/love-languages/${token}` });
   } catch (err) {
-    console.error("Erro ao criar link:", {
-      message: err.message,
-      stack: err.stack,
-    });
+    console.error("Erro ao criar link:", err);
     res.status(500).json({ error: "Erro ao criar link" });
   }
 };
 
-exports.getLoveTestLink = async (req, res, next) => {
+exports.getLoveTestLink = async (req, res) => {
   try {
     const { token } = req.query;
-    console.log("Verificando link para token:", token);
     const testLink = await TestLink.findOne({
       token,
       testType: "love-languages",
     });
-    if (!testLink) {
-      console.log("Token não encontrado:", token);
-      throw new Error("Link inválido");
-    }
-    if (testLink.expiresAt < new Date()) {
-      console.log("Token expirado:", token, "ExpiresAt:", testLink.expiresAt);
-      throw new Error("Link expirado");
-    }
-    console.log("Link válido encontrado:", testLink);
+    if (!testLink) throw new Error("Link inválido");
+    if (testLink.expiresAt < new Date()) throw new Error("Link expirado");
+
     res.json({ testName: testLink.testName });
   } catch (err) {
-    console.error("Erro ao buscar link:", {
-      message: err.message,
-      stack: err.stack,
-      token: req.query.token,
+    console.error("Erro ao buscar link:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getResultById = async (req, res) => {
+  try {
+    const { resultId } = req.params;
+    const result = await LoveResult.findById(resultId);
+    if (!result) throw new Error("Resultado não encontrado");
+
+    const profileData = await LoveProfile.findOne({
+      profile: result.primaryLanguage,
     });
+
+    res.json({
+      name: result.name,
+      primaryLanguage:
+        profileNameMap[result.primaryLanguage] || result.primaryLanguage,
+      scores: result.scores,
+      date: result.date,
+      description: profileData?.description,
+      status: result.status || "completed",
+    });
+  } catch (err) {
+    console.error("Erro ao buscar resultado:", err);
     res.status(500).json({ error: err.message });
   }
 };
