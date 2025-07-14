@@ -89,7 +89,9 @@ exports.submitAnswers = async (req, res, next) => {
     const savedResult = await Result.create({
       scores,
       profile: profileData.profile,
-      name: name || testLink.testName,
+      name: name || testLink.testName || "Usuário Anônimo",
+      email: testLink.email || "", 
+      phone: testLink.phone || "", 
       date: new Date(),
       status: "completed",
     });
@@ -153,7 +155,7 @@ exports.getResults = async (req, res, next) => {
       .sort({ date: -1 })
       .skip((page - 1) * limit)
       .limit(parseInt(limit))
-      .select("name profile scores date");
+      .select("name email phone date profile status profileColor");
 
     const profiles = await Profile.find({
       profile: { $in: results.map((r) => r.profile) },
@@ -169,6 +171,8 @@ exports.getResults = async (req, res, next) => {
       profile: profileNameMap[result.profile] || result.profile,
       profileColor: profileColorMap[result.profile] || "bg-gray-600",
       status: result.status || "completed",
+      email: result.email || "-",
+      phone: result.phone || "-",
     }));
 
     const total = await Result.countDocuments(query);
@@ -188,21 +192,22 @@ exports.getResults = async (req, res, next) => {
 exports.createTestLink = async (req, res, next) => {
   try {
     const { testName } = req.body;
-    if (!testName) {
-      return res.status(400).json({ error: "Nome do usuário é obrigatório" });
-    }
+
     const token = crypto.randomBytes(16).toString("hex");
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1h de validade
 
     const testLink = await TestLink.create({
       token,
       testType: "disc",
-      testName,
+      testName: testName || null, // permite nulo
       expiresAt,
       used: false,
     });
 
-    res.json({ link: `http://localhost:3000/test/disc/${token}` });
+    res.json({
+      link: `http://localhost:3000/test/disc/${token}`,
+      token: testLink.token,
+    });
   } catch (err) {
     console.error("Erro ao criar link:", err);
     res.status(500).json({ error: "Erro ao criar link" });
@@ -242,5 +247,57 @@ exports.getResultById = async (req, res, next) => {
   } catch (err) {
     console.error("Erro ao buscar resultado:", err);
     res.status(500).json({ error: err.message });
+  }
+  exports.updateUserInfo = async (req, res) => {
+    try {
+      const { token, name, email, phone } = req.body;
+
+      if (!token || !name || !email || !phone) {
+        return res
+          .status(400)
+          .json({ error: "Todos os campos são obrigatórios" });
+      }
+
+      const testLink = await TestLink.findOne({ token, testType: "disc" });
+      if (!testLink || testLink.expiresAt < new Date()) {
+        return res.status(400).json({ error: "Link inválido ou expirado" });
+      }
+
+      testLink.testName = name;
+      await testLink.save();
+
+      res.json({ success: true });
+    } catch (err) {
+      console.error("Erro ao atualizar dados do usuário:", err);
+      res.status(500).json({ error: "Erro ao salvar dados do usuário" });
+    }
+  };
+};
+
+exports.updateUserInfo = async (req, res) => {
+  try {
+    const { token, name, email, phone } = req.body;
+
+    if (!token || !name || !email || !phone) {
+      return res
+        .status(400)
+        .json({ error: "Todos os campos são obrigatórios" });
+    }
+
+    const testLink = await TestLink.findOne({ token, testType: "disc" });
+    if (!testLink || testLink.expiresAt < new Date()) {
+      return res.status(400).json({ error: "Link inválido ou expirado" });
+    }
+
+    testLink.testName = name;
+    testLink.email = email;
+    testLink.phone = phone;
+
+    await testLink.save();
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Erro ao atualizar dados do usuário DISC:", err);
+    res.status(500).json({ error: "Erro ao salvar dados do usuário" });
   }
 };

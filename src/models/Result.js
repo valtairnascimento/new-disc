@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 
 const resultSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  email: { type: String },
+  phone: { type: String },
   scores: {
     D: { type: Number, required: true },
     I: { type: Number, required: true },

@@ -13,7 +13,5 @@ exports.answerSchema = Joi.object({
 });
 
 exports.createTestLinkSchema = Joi.object({
-  testName: Joi.string().required().messages({
-    "string.empty": "Nome do usuário é obrigatório",
-  }),
+  testName: Joi.string().allow("", null),
 });

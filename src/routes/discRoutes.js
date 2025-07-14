@@ -22,5 +22,6 @@ router.post(
 );
 router.get("/test-link", discController.getTestLink);
 router.get("/result/:resultId", discController.getResultById);
+router.post("/update-user-info", discController.updateUserInfo);
 
 module.exports = router;
