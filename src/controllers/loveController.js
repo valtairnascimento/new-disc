@@ -171,7 +171,7 @@ exports.getLoveResults = async (req, res) => {
       .sort({ date: -1 })
       .skip((page - 1) * limit)
       .limit(parseInt(limit))
-      .select("name email phone profile scores date");
+      .select("name email phone primaryLanguage scores date");
 
     const profiles = await LoveProfile.find({
       profile: { $in: results.map((r) => r.primaryLanguage) },
@@ -191,6 +191,7 @@ exports.getLoveResults = async (req, res) => {
       email: result.email || "-",
       phone: result.phone || "-",
     }));
+
 
     const total = await LoveResult.countDocuments(query);
 
