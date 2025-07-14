@@ -1,6 +1,5 @@
 const PDFDocument = require("pdfkit");
 
-// Dados completos dos perfis DISC
 const DISC_PROFILES = {
   D: {
     name: "Dominância",
@@ -140,7 +139,6 @@ const DISC_PROFILES = {
   }
 };
 
-// Dados completos das Linguagens do Amor
 const LOVE_LANGUAGES = {
   Words: {
     name: "Palavras de Afirmação",
@@ -344,7 +342,6 @@ const LOVE_LANGUAGES = {
   }
 };
 
-// Função para calcular porcentagens
 function calculatePercentages(scores) {
   const total = Object.values(scores).reduce((sum, score) => sum + score, 0);
   const percentages = {};
@@ -356,7 +353,6 @@ function calculatePercentages(scores) {
   return { percentages, total };
 }
 
-// Função para gerar análise combinada DISC
 function generateCombinedDiscAnalysis(profile, percentages) {
   const analysis = {
     primaryProfile: profile[0],
@@ -389,7 +385,6 @@ function generateCombinedDiscAnalysis(profile, percentages) {
   return analysis;
 }
 
-// Função para gerar recomendações específicas
 function generatePersonalizedRecommendations(type, profile, percentages) {
   const recommendations = [];
   
@@ -398,7 +393,6 @@ function generatePersonalizedRecommendations(type, profile, percentages) {
       .sort((a, b) => b[1] - a[1])
       .map(([key, value]) => ({ profile: key, percentage: value }));
     
-    // Recomendações baseadas no perfil dominante
     const dominant = sortedProfiles[0];
     const secondary = sortedProfiles[1];
     
@@ -410,14 +404,12 @@ function generatePersonalizedRecommendations(type, profile, percentages) {
       recommendations.push(`Perfil Híbrido: Sua combinação ${dominant.profile}/${secondary.profile} é uma grande vantagem em situações que requerem flexibilidade.`);
     }
     
-    // Recomendações de desenvolvimento
     sortedProfiles.forEach(({ profile, percentage }) => {
       if (percentage < 15) {
         recommendations.push(`Oportunidade de Crescimento: Considere desenvolver mais características de ${DISC_PROFILES[profile].name} para maior versatilidade.`);
       }
     });
   } else {
-    // Recomendações para Linguagens do Amor
     const sortedLanguages = Object.entries(percentages)
       .sort((a, b) => b[1] - a[1])
       .map(([key, value]) => ({ language: key, percentage: value }));
@@ -433,7 +425,6 @@ function generatePersonalizedRecommendations(type, profile, percentages) {
       recommendations.push(`Linguagem Secundária: ${LOVE_LANGUAGES[secondary.language].name} também é importante para você.`);
     }
     
-    // Recomendações equilibradas
     const balanced = sortedLanguages.filter(lang => lang.percentage >= 15 && lang.percentage <= 30);
     if (balanced.length >= 3) {
       recommendations.push("Perfil Equilibrado: Você aprecia múltiplas formas de expressar e receber amor, o que é uma grande vantagem nos relacionamentos.");
@@ -443,7 +434,6 @@ function generatePersonalizedRecommendations(type, profile, percentages) {
   return recommendations;
 }
 
-// Função principal para gerar PDF
 exports.generatePDFContent = async (result, profileData) => {
   try {
     console.log("Gerando PDF completo para resultado:", result);
@@ -456,10 +446,8 @@ exports.generatePDFContent = async (result, profileData) => {
     const isDiscProfile = scores.hasOwnProperty('D');
     const profileType = isDiscProfile ? 'DISC' : 'LOVE';
     
-    // Calcular porcentagens
     const { percentages, total } = calculatePercentages(scores);
     
-    // Dados do perfil
     const profileName = result.profile || result.primaryLanguage || "Desconhecido";
     const profilesData = isDiscProfile ? DISC_PROFILES : LOVE_LANGUAGES;
     
@@ -488,7 +476,6 @@ exports.generatePDFContent = async (result, profileData) => {
         reject(err);
       });
       
-      // Função auxiliar para adicionar título de seção
       function addSectionTitle(title, fontSize = 16) {
         doc.fontSize(fontSize)
            .fillColor('#2C3E50')
@@ -496,7 +483,6 @@ exports.generatePDFContent = async (result, profileData) => {
            .moveDown(0.5);
       }
       
-      // Função auxiliar para adicionar texto normal
       function addText(text, fontSize = 12) {
         doc.fontSize(fontSize)
            .fillColor('#2C3E50')
@@ -504,7 +490,6 @@ exports.generatePDFContent = async (result, profileData) => {
            .moveDown(0.3);
       }
       
-      // Função auxiliar para adicionar lista
       function addList(items, bullet = '•') {
         items.forEach(item => {
           doc.fontSize(11)
@@ -515,7 +500,6 @@ exports.generatePDFContent = async (result, profileData) => {
         doc.moveDown(0.3);
       }
       
-      // Função auxiliar para adicionar gráfico de barras simples
       function addBarChart(data, title) {
         doc.fontSize(14)
            .fillColor('#2C3E50')
@@ -535,17 +519,14 @@ exports.generatePDFContent = async (result, profileData) => {
           const x = startX + (index * barWidth);
           const y = startY + chartHeight - barHeight;
           
-          // Desenhar barra
           doc.rect(x + 10, y, barWidth - 20, barHeight)
              .fillColor('#3498DB')
              .fill();
           
-          // Adicionar label
           doc.fontSize(10)
              .fillColor('#2C3E50')
              .text(key, x, startY + chartHeight + 10, { width: barWidth, align: 'center' });
           
-          // Adicionar valor
           doc.fontSize(10)
              .fillColor('#FFFFFF')
              .text(`${value}%`, x, y + barHeight/2, { width: barWidth, align: 'center' });
@@ -554,7 +535,6 @@ exports.generatePDFContent = async (result, profileData) => {
         doc.y = startY + chartHeight + 40;
       }
       
-      // PÁGINA 1: CAPA E INFORMAÇÕES GERAIS
       doc.fontSize(28)
          .fillColor('#2C3E50')
          .text(`RELATÓRIO DE PERFIL ${profileType}`, { align: 'center' })
@@ -565,7 +545,6 @@ exports.generatePDFContent = async (result, profileData) => {
          .text('Análise Completa e Detalhada', { align: 'center' })
          .moveDown(2);
       
-      // Informações básicas
       doc.fontSize(16)
          .fillColor('#2C3E50')
          .text(`Nome: ${result.name}`)
@@ -583,16 +562,13 @@ exports.generatePDFContent = async (result, profileData) => {
          .text(`Total de Respostas: ${total}`)
          .moveDown(2);
       
-      // Resumo executivo
       addSectionTitle('RESUMO EXECUTIVO', 18);
       addText(`Este relatório apresenta uma análise completa do perfil ${profileType} de ${result.name}, baseada em ${total} respostas coletadas. O perfil principal identificado é ${profileName}, com características específicas que serão detalhadas ao longo deste documento.`);
       
-      // Gráfico de distribuição
       doc.addPage();
       addSectionTitle('DISTRIBUIÇÃO DO PERFIL', 18);
       addBarChart(percentages, 'Porcentagem por Categoria');
       
-      // Tabela de scores detalhada
       addSectionTitle('PONTUAÇÃO DETALHADA');
       doc.fontSize(12)
          .fillColor('#2C3E50')
@@ -602,14 +578,12 @@ exports.generatePDFContent = async (result, profileData) => {
          .text('Classificação', 400, doc.y)
          .moveDown(0.5);
       
-      // Linha divisória
       doc.moveTo(50, doc.y)
          .lineTo(550, doc.y)
          .strokeColor('#BDC3C7')
          .stroke()
          .moveDown(0.5);
       
-      // Dados da tabela
       const sortedData = Object.entries(scores)
         .sort((a, b) => b[1] - a[1])
         .map(([key, value], index) => {
@@ -634,7 +608,6 @@ exports.generatePDFContent = async (result, profileData) => {
            .moveDown(0.4);
       });
       
-      // ANÁLISE DETALHADA POR CATEGORIA
       doc.addPage();
       addSectionTitle('ANÁLISE DETALHADA POR CATEGORIA', 18);
       
@@ -682,11 +655,9 @@ exports.generatePDFContent = async (result, profileData) => {
         }
       });
       
-      // ANÁLISE COMBINADA E RECOMENDAÇÕES
       doc.addPage();
       addSectionTitle('ANÁLISE COMBINADA E RECOMENDAÇÕES', 18);
       
-      // Gerar recomendações personalizadas
       const recommendations = generatePersonalizedRecommendations(profileType, profileName, percentages);
       
       addSectionTitle('Perfil Integrado:', 14);
@@ -706,7 +677,6 @@ exports.generatePDFContent = async (result, profileData) => {
       addSectionTitle('Recomendações Personalizadas:', 14);
       addList(recommendations);
       
-      // PLANO DE DESENVOLVIMENTO
       doc.addPage();
       addSectionTitle('PLANO DE DESENVOLVIMENTO PESSOAL', 18);
       
@@ -745,7 +715,6 @@ exports.generatePDFContent = async (result, profileData) => {
         ]);
       }
       
-      // APLICAÇÕES PRÁTICAS
       doc.addPage();
       addSectionTitle('APLICAÇÕES PRÁTICAS', 18);
       
@@ -807,7 +776,6 @@ exports.generatePDFContent = async (result, profileData) => {
         ]);
       }
       
-      // AUTOCONHECIMENTO E REFLEXÃO
       doc.addPage();
       addSectionTitle('AUTOCONHECIMENTO E REFLEXÃO', 18);
       
@@ -855,7 +823,6 @@ exports.generatePDFContent = async (result, profileData) => {
         ]);
       }
       
-      // CONCLUSÃO E PRÓXIMOS PASSOS
       doc.addPage();
       addSectionTitle('CONCLUSÃO E PRÓXIMOS PASSOS', 18);
       
@@ -888,7 +855,6 @@ exports.generatePDFContent = async (result, profileData) => {
         "Mantenha um diário de reflexão sobre seu progresso"
       ]);
       
-      // RECURSOS ADICIONAIS
       addSectionTitle('Recursos para Desenvolvimento Contínuo:', 14);
       if (isDiscProfile) {
         addList([
@@ -908,7 +874,6 @@ exports.generatePDFContent = async (result, profileData) => {
         ]);
       }
       
-      // RODAPÉ FINAL
       doc.fontSize(10)
          .fillColor('#7F8C8D')
          .text(`Este relatório foi gerado em ${new Date().toLocaleDateString('pt-BR')} e representa uma análise baseada nas respostas fornecidas em ${new Date(result.date).toLocaleDateString('pt-BR')}. Para melhores resultados, recomenda-se revisitar esta avaliação periodicamente.`, { align: 'center' });
@@ -926,7 +891,6 @@ exports.generatePDFContent = async (result, profileData) => {
   }
 };
 
-// Função auxiliar para calcular perfis híbridos DISC
 function calculateHybridDiscProfile(scores) {
   const sortedScores = Object.entries(scores)
     .sort((a, b) => b[1] - a[1])
@@ -939,7 +903,6 @@ function calculateHybridDiscProfile(scores) {
   const primaryPercentage = (primary.score / total) * 100;
   const secondaryPercentage = (secondary.score / total) * 100;
   
-  // Determinar se é um perfil híbrido
   if (secondaryPercentage >= primaryPercentage * 0.6) {
     return `${primary.profile}${secondary.profile}`;
   }
@@ -947,7 +910,6 @@ function calculateHybridDiscProfile(scores) {
   return primary.profile;
 }
 
-// Função auxiliar para calcular linguagem do amor dominante
 function calculateDominantLoveLanguage(scores) {
   const sortedScores = Object.entries(scores)
     .sort((a, b) => b[1] - a[1])
@@ -960,12 +922,10 @@ function calculateDominantLoveLanguage(scores) {
   const primaryPercentage = (primary.score / total) * 100;
   const secondaryPercentage = (secondary.score / total) * 100;
   
-  // Se há uma linguagem claramente dominante
   if (primaryPercentage >= 30 && primaryPercentage > secondaryPercentage * 1.3) {
     return primary.language;
   }
   
-  // Se há duas linguagens próximas
   if (Math.abs(primaryPercentage - secondaryPercentage) <= 5) {
     return `${primary.language}/${secondary.language}`;
   }
@@ -973,7 +933,6 @@ function calculateDominantLoveLanguage(scores) {
   return primary.language;
 }
 
-// Exportar funções auxiliares
 exports.calculatePercentages = calculatePercentages;
 exports.generatePersonalizedRecommendations = generatePersonalizedRecommendations;
 exports.calculateHybridDiscProfile = calculateHybridDiscProfile;
