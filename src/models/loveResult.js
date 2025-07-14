@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 
 const loveResultSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  email: {type: String},
+  phone: { type: String },
   scores: {
     Words: { type: Number, required: true },
     Acts: { type: Number, required: true },
