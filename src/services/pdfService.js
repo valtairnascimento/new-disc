@@ -3,7 +3,8 @@ const PDFDocument = require("pdfkit");
 const DISC_PROFILES = {
   D: {
     name: "Dominância",
-    description: "Pessoas com alta dominância são diretas, decisivas e focadas em resultados. Gostam de desafios e assumem riscos calculados.",
+    description:
+      "Pessoas com alta dominância são diretas, decisivas e focadas em resultados. Gostam de desafios e assumem riscos calculados.",
     characteristics: [
       "Orientado para resultados",
       "Decisivo e direto",
@@ -12,7 +13,7 @@ const DISC_PROFILES = {
       "Foca em objetivos",
       "Independente",
       "Competitivo",
-      "Líder natural"
+      "Líder natural",
     ],
     strengths: [
       "Capacidade de tomar decisões rápidas",
@@ -21,7 +22,7 @@ const DISC_PROFILES = {
       "Iniciativa e proatividade",
       "Coragem para assumir riscos",
       "Foco em objetivos",
-      "Determinação e persistência"
+      "Determinação e persistência",
     ],
     challenges: [
       "Pode ser impaciente com detalhes",
@@ -29,15 +30,19 @@ const DISC_PROFILES = {
       "Pode ignorar sentimentos dos outros",
       "Dificuldade em aceitar críticas",
       "Pode ser autoritário",
-      "Impaciência com processos lentos"
+      "Impaciência com processos lentos",
     ],
-    workStyle: "Prefere ambientes dinâmicos, com autonomia e desafios constantes. Trabalha bem sob pressão e gosta de liderar projetos.",
-    communication: "Comunicação direta, objetiva e focada em resultados. Aprecia feedback direto e conversas práticas.",
-    motivation: "Motivado por desafios, autoridade, reconhecimento por resultados e oportunidades de liderança."
+    workStyle:
+      "Prefere ambientes dinâmicos, com autonomia e desafios constantes. Trabalha bem sob pressão e gosta de liderar projetos.",
+    communication:
+      "Comunicação direta, objetiva e focada em resultados. Aprecia feedback direto e conversas práticas.",
+    motivation:
+      "Motivado por desafios, autoridade, reconhecimento por resultados e oportunidades de liderança.",
   },
   I: {
     name: "Influência",
-    description: "Pessoas com alta influência são entusiasmadas, expressivas e orientadas para pessoas. Gostam de interagir e inspirar outros.",
+    description:
+      "Pessoas com alta influência são entusiasmadas, expressivas e orientadas para pessoas. Gostam de interagir e inspirar outros.",
     characteristics: [
       "Entusiasmado e otimista",
       "Expressivo e comunicativo",
@@ -46,7 +51,7 @@ const DISC_PROFILES = {
       "Flexível e adaptável",
       "Criativo e inovador",
       "Persuasivo",
-      "Sociável"
+      "Sociável",
     ],
     strengths: [
       "Habilidades de comunicação",
@@ -55,7 +60,7 @@ const DISC_PROFILES = {
       "Flexibilidade e adaptabilidade",
       "Criatividade e inovação",
       "Networking e relacionamentos",
-      "Persuasão e influência"
+      "Persuasão e influência",
     ],
     challenges: [
       "Pode ser desorganizado",
@@ -63,15 +68,19 @@ const DISC_PROFILES = {
       "Dificuldade com rotinas",
       "Pode ser superficial em análises",
       "Evita confrontos",
-      "Pode ser inconsistente"
+      "Pode ser inconsistente",
     ],
-    workStyle: "Prefere ambientes colaborativos, dinâmicos e com interação social. Trabalha bem em equipe e gosta de variedade.",
-    communication: "Comunicação expressiva, entusiasmada e focada em pessoas. Aprecia feedback positivo e conversas inspiradoras.",
-    motivation: "Motivado por reconhecimento público, interação social, variedade e oportunidades de influenciar positivamente."
+    workStyle:
+      "Prefere ambientes colaborativos, dinâmicos e com interação social. Trabalha bem em equipe e gosta de variedade.",
+    communication:
+      "Comunicação expressiva, entusiasmada e focada em pessoas. Aprecia feedback positivo e conversas inspiradoras.",
+    motivation:
+      "Motivado por reconhecimento público, interação social, variedade e oportunidades de influenciar positivamente.",
   },
   S: {
     name: "Estabilidade",
-    description: "Pessoas com alta estabilidade são confiáveis, pacientes e orientadas para equipe. Valorizam harmonia e consistência.",
+    description:
+      "Pessoas com alta estabilidade são confiáveis, pacientes e orientadas para equipe. Valorizam harmonia e consistência.",
     characteristics: [
       "Confiável e leal",
       "Paciente e calmo",
@@ -80,7 +89,7 @@ const DISC_PROFILES = {
       "Bom ouvinte",
       "Cooperativo",
       "Empático",
-      "Metódico"
+      "Metódico",
     ],
     strengths: [
       "Confiabilidade e lealdade",
@@ -89,7 +98,7 @@ const DISC_PROFILES = {
       "Capacidade de ouvir",
       "Empatia e compreensão",
       "Consistência no trabalho",
-      "Mediação de conflitos"
+      "Mediação de conflitos",
     ],
     challenges: [
       "Resistência a mudanças",
@@ -97,15 +106,19 @@ const DISC_PROFILES = {
       "Pode ser passivo demais",
       "Evita confrontos",
       "Pode ser inflexível",
-      "Dificuldade em dizer não"
+      "Dificuldade em dizer não",
     ],
-    workStyle: "Prefere ambientes estáveis, previsíveis e com relacionamentos harmoniosos. Trabalha bem em equipe e gosta de rotinas.",
-    communication: "Comunicação calma, respeitosa e focada em harmonia. Aprecia feedback construtivo e conversas colaborativas.",
-    motivation: "Motivado por estabilidade, reconhecimento da equipe, segurança e oportunidades de ajudar outros."
+    workStyle:
+      "Prefere ambientes estáveis, previsíveis e com relacionamentos harmoniosos. Trabalha bem em equipe e gosta de rotinas.",
+    communication:
+      "Comunicação calma, respeitosa e focada em harmonia. Aprecia feedback construtivo e conversas colaborativas.",
+    motivation:
+      "Motivado por estabilidade, reconhecimento da equipe, segurança e oportunidades de ajudar outros.",
   },
   C: {
     name: "Conformidade",
-    description: "Pessoas com alta conformidade são analíticas, precisas e orientadas para qualidade. Valorizam excelência e precisão.",
+    description:
+      "Pessoas com alta conformidade são analíticas, precisas e orientadas para qualidade. Valorizam excelência e precisão.",
     characteristics: [
       "Analítico e detalhista",
       "Preciso e exato",
@@ -114,7 +127,7 @@ const DISC_PROFILES = {
       "Cauteloso e prudente",
       "Diplomático",
       "Perfeccionista",
-      "Objetivo"
+      "Objetivo",
     ],
     strengths: [
       "Atenção aos detalhes",
@@ -123,7 +136,7 @@ const DISC_PROFILES = {
       "Organização e sistematização",
       "Planejamento estratégico",
       "Diplomacia e tato",
-      "Resolução de problemas"
+      "Resolução de problemas",
     ],
     challenges: [
       "Pode ser perfeccionista demais",
@@ -131,18 +144,22 @@ const DISC_PROFILES = {
       "Dificuldade com prazos apertados",
       "Pode ser inflexível",
       "Evita riscos",
-      "Pode ser pessimista"
+      "Pode ser pessimista",
     ],
-    workStyle: "Prefere ambientes organizados, com processos claros e tempo para análise. Trabalha bem sozinho e gosta de qualidade.",
-    communication: "Comunicação precisa, factual e focada em dados. Aprecia feedback específico e conversas técnicas.",
-    motivation: "Motivado por qualidade, reconhecimento da expertise, segurança e oportunidades de especialização."
-  }
+    workStyle:
+      "Prefere ambientes organizados, com processos claros e tempo para análise. Trabalha bem sozinho e gosta de qualidade.",
+    communication:
+      "Comunicação precisa, factual e focada em dados. Aprecia feedback específico e conversas técnicas.",
+    motivation:
+      "Motivado por qualidade, reconhecimento da expertise, segurança e oportunidades de especialização.",
+  },
 };
 
 const LOVE_LANGUAGES = {
   Words: {
     name: "Palavras de Afirmação",
-    description: "Pessoas com esta linguagem do amor valorizam palavras encorajadoras, elogios sinceros e expressões verbais de amor e apreço.",
+    description:
+      "Pessoas com esta linguagem do amor valorizam palavras encorajadoras, elogios sinceros e expressões verbais de amor e apreço.",
     characteristics: [
       "Valoriza elogios sinceros",
       "Aprecia palavras de encorajamento",
@@ -150,7 +167,7 @@ const LOVE_LANGUAGES = {
       "Sensível às palavras negativas",
       "Expressa amor verbalmente",
       "Gosta de bilhetes e mensagens",
-      "Aprecia reconhecimento público"
+      "Aprecia reconhecimento público",
     ],
     howToShow: [
       "Dar elogios sinceros e específicos",
@@ -159,7 +176,7 @@ const LOVE_LANGUAGES = {
       "Escrever bilhetes de amor",
       "Reconhecer conquistas",
       "Usar palavras de encorajamento",
-      "Expressar gratidão regularmente"
+      "Expressar gratidão regularmente",
     ],
     whatToAvoid: [
       "Críticas duras ou destrutivas",
@@ -168,7 +185,7 @@ const LOVE_LANGUAGES = {
       "Ignorar conquistas",
       "Falta de comunicação",
       "Comentários negativos sobre aparência",
-      "Palavras ditas na raiva"
+      "Palavras ditas na raiva",
     ],
     practicalTips: [
       "Deixe bilhetes carinhosos",
@@ -177,12 +194,13 @@ const LOVE_LANGUAGES = {
       "Mantenha um diário de gratidão",
       "Use palavras específicas nos elogios",
       "Celebre conquistas verbalmente",
-      "Pratique comunicação não-violenta"
-    ]
+      "Pratique comunicação não-violenta",
+    ],
   },
   Acts: {
     name: "Atos de Serviço",
-    description: "Pessoas com esta linguagem do amor sentem-se amadas quando outros fazem coisas práticas para ajudá-las ou facilitar sua vida.",
+    description:
+      "Pessoas com esta linguagem do amor sentem-se amadas quando outros fazem coisas práticas para ajudá-las ou facilitar sua vida.",
     characteristics: [
       "Valoriza ações práticas",
       "Aprecia ajuda com tarefas",
@@ -190,7 +208,7 @@ const LOVE_LANGUAGES = {
       "Gosta de ser cuidado",
       "Expressa amor através de ações",
       "Nota quando outros se esforçam",
-      "Valoriza iniciativa"
+      "Valoriza iniciativa",
     ],
     howToShow: [
       "Fazer tarefas domésticas",
@@ -199,7 +217,7 @@ const LOVE_LANGUAGES = {
       "Cuidar quando está doente",
       "Resolver problemas práticos",
       "Antecipar necessidades",
-      "Oferecer ajuda sem ser pedido"
+      "Oferecer ajuda sem ser pedido",
     ],
     whatToAvoid: [
       "Preguiça ou negligência",
@@ -208,7 +226,7 @@ const LOVE_LANGUAGES = {
       "Ignorar pedidos de ajuda",
       "Ser egoísta com o tempo",
       "Não cumprir compromissos",
-      "Esperar sempre ser pedido"
+      "Esperar sempre ser pedido",
     ],
     practicalTips: [
       "Pergunte como pode ajudar",
@@ -217,12 +235,13 @@ const LOVE_LANGUAGES = {
       "Surpreenda com gestos práticos",
       "Seja consistente nos atos",
       "Aprenda habilidades úteis",
-      "Planeje ações antecipadamente"
-    ]
+      "Planeje ações antecipadamente",
+    ],
   },
   Gifts: {
     name: "Presentes",
-    description: "Pessoas com esta linguagem do amor valorizam presentes bem pensados como símbolos de amor e consideração.",
+    description:
+      "Pessoas com esta linguagem do amor valorizam presentes bem pensados como símbolos de amor e consideração.",
     characteristics: [
       "Valoriza presentes significativos",
       "Aprecia o pensamento por trás",
@@ -230,7 +249,7 @@ const LOVE_LANGUAGES = {
       "Gosta de dar presentes",
       "Lembra de datas especiais",
       "Valoriza símbolos de amor",
-      "Aprecia surpresas"
+      "Aprecia surpresas",
     ],
     howToShow: [
       "Dar presentes significativos",
@@ -239,7 +258,7 @@ const LOVE_LANGUAGES = {
       "Fazer presentes personalizados",
       "Dar flores sem motivo especial",
       "Escolher presentes pensados",
-      "Criar tradições de presentes"
+      "Criar tradições de presentes",
     ],
     whatToAvoid: [
       "Esquecer datas importantes",
@@ -248,7 +267,7 @@ const LOVE_LANGUAGES = {
       "Ignorar preferências",
       "Presentes de última hora",
       "Não dar presentes",
-      "Presentes práticos demais"
+      "Presentes práticos demais",
     ],
     practicalTips: [
       "Mantenha uma lista de ideias",
@@ -257,12 +276,13 @@ const LOVE_LANGUAGES = {
       "Invista em presentes personalizados",
       "Dê presentes 'sem motivo'",
       "Guarde embrulhos especiais",
-      "Faça cartões artesanais"
-    ]
+      "Faça cartões artesanais",
+    ],
   },
   Time: {
     name: "Tempo de Qualidade",
-    description: "Pessoas com esta linguagem do amor valorizam atenção total e tempo dedicado exclusivamente a elas.",
+    description:
+      "Pessoas com esta linguagem do amor valorizam atenção total e tempo dedicado exclusivamente a elas.",
     characteristics: [
       "Valoriza atenção total",
       "Gosta de conversas profundas",
@@ -270,7 +290,7 @@ const LOVE_LANGUAGES = {
       "Sente-se negligenciado facilmente",
       "Prefere qualidade à quantidade",
       "Gosta de atividades compartilhadas",
-      "Valoriza presença focada"
+      "Valoriza presença focada",
     ],
     howToShow: [
       "Dar atenção total",
@@ -279,7 +299,7 @@ const LOVE_LANGUAGES = {
       "Fazer refeições sem distrações",
       "Criar rituais de conexão",
       "Escutar ativamente",
-      "Estar presente mentalmente"
+      "Estar presente mentalmente",
     ],
     whatToAvoid: [
       "Distrações durante momentos juntos",
@@ -288,7 +308,7 @@ const LOVE_LANGUAGES = {
       "Não dar atenção total",
       "Priorizar outras coisas",
       "Conversas superficiais",
-      "Sempre estar ocupado"
+      "Sempre estar ocupado",
     ],
     practicalTips: [
       "Desligue dispositivos eletrônicos",
@@ -297,12 +317,13 @@ const LOVE_LANGUAGES = {
       "Faça perguntas profundas",
       "Pratique escuta ativa",
       "Dedique tempo exclusivo",
-      "Esteja presente no momento"
-    ]
+      "Esteja presente no momento",
+    ],
   },
   Touch: {
     name: "Toque Físico",
-    description: "Pessoas com esta linguagem do amor sentem-se conectadas e amadas através do toque físico apropriado e carinhoso.",
+    description:
+      "Pessoas com esta linguagem do amor sentem-se conectadas e amadas através do toque físico apropriado e carinhoso.",
     characteristics: [
       "Valoriza toque físico",
       "Gosta de abraços e carícias",
@@ -310,7 +331,7 @@ const LOVE_LANGUAGES = {
       "Expressa amor fisicamente",
       "Nota falta de toque",
       "Aprecia proximidade física",
-      "Gosta de gestos carinhosos"
+      "Gosta de gestos carinhosos",
     ],
     howToShow: [
       "Dar abraços calorosos",
@@ -319,7 +340,7 @@ const LOVE_LANGUAGES = {
       "Segurar as mãos",
       "Dar massagens",
       "Tocar durante conversas",
-      "Expressar carinho fisicamente"
+      "Expressar carinho fisicamente",
     ],
     whatToAvoid: [
       "Evitar toque físico",
@@ -328,7 +349,7 @@ const LOVE_LANGUAGES = {
       "Ignorar necessidade de toque",
       "Ser rude fisicamente",
       "Não respeitar limites",
-      "Toque inadequado"
+      "Toque inadequado",
     ],
     practicalTips: [
       "Respeite sempre os limites",
@@ -337,21 +358,53 @@ const LOVE_LANGUAGES = {
       "Toque de forma apropriada",
       "Observe as preferências",
       "Seja gentil e respeitoso",
-      "Comunique sobre preferências"
-    ]
+      "Comunique sobre preferências",
+    ],
+  },
+};
+
+
+
+const COLORS = {
+  primary: '#2563EB',
+  secondary: '#7C3AED', 
+  accent: '#059669',
+  warning: '#D97706',
+  danger: '#DC2626',
+  success: '#10B981',
+  gray: {
+    50: '#F9FAFB',
+    100: '#F3F4F6',
+    200: '#E5E7EB',
+    300: '#D1D5DB',
+    400: '#9CA3AF',
+    500: '#6B7280',
+    600: '#4B5563',
+    700: '#374151',
+    800: '#1F2937',
+    900: '#111827'
+  },
+  gradients: {
+    blue: ['#3B82F6', '#1D4ED8'],
+    red: ['#EF4444', '#B91C1C'],
+    green: ['#10B981', '#047857'],
+    yellow: ['#F59E0B', '#D97706'],
+    purple: ['#8B5CF6', '#7C3AED']
   }
 };
 
 function calculatePercentages(scores) {
   const total = Object.values(scores).reduce((sum, score) => sum + score, 0);
   const percentages = {};
-  
+
   Object.entries(scores).forEach(([key, value]) => {
     percentages[key] = total > 0 ? Math.round((value / total) * 100) : 0;
   });
-  
+
   return { percentages, total };
 }
+
+// ... keep existing code (generateCombinedDiscAnalysis function)
 
 function generateCombinedDiscAnalysis(profile, percentages) {
   const analysis = {
@@ -365,17 +418,21 @@ function generateCombinedDiscAnalysis(profile, percentages) {
     decisionMaking: "",
     stressReaction: "",
     motivation: "",
-    development: []
+    development: [],
   };
 
   const primary = DISC_PROFILES[analysis.primaryProfile];
-  const secondary = analysis.secondaryProfile ? DISC_PROFILES[analysis.secondaryProfile] : null;
+  const secondary = analysis.secondaryProfile
+    ? DISC_PROFILES[analysis.secondaryProfile]
+    : null;
 
   if (secondary) {
-    analysis.description = `Perfil ${primary.name}/${secondary.name}: Combina características de ${primary.name.toLowerCase()} com elementos de ${secondary.name.toLowerCase()}.`;
+    analysis.description = `Perfil ${primary.name}/${
+      secondary.name
+    }: Combina características de ${primary.name.toLowerCase()} com elementos de ${secondary.name.toLowerCase()}.`;
     analysis.combinedTraits = [
       ...primary.characteristics.slice(0, 4),
-      ...secondary.characteristics.slice(0, 3)
+      ...secondary.characteristics.slice(0, 3),
     ];
   } else {
     analysis.description = `Perfil ${primary.name}: ${primary.description}`;
@@ -385,503 +442,542 @@ function generateCombinedDiscAnalysis(profile, percentages) {
   return analysis;
 }
 
+// ... keep existing code (generatePersonalizedRecommendations function)
+
 function generatePersonalizedRecommendations(type, profile, percentages) {
   const recommendations = [];
-  
-  if (type === 'DISC') {
+
+  if (type === "DISC") {
     const sortedProfiles = Object.entries(percentages)
       .sort((a, b) => b[1] - a[1])
       .map(([key, value]) => ({ profile: key, percentage: value }));
-    
+
     const dominant = sortedProfiles[0];
     const secondary = sortedProfiles[1];
-    
+
     if (dominant.percentage >= 40) {
-      recommendations.push(`Forte ${DISC_PROFILES[dominant.profile].name}: Desenvolva ainda mais suas características naturais de ${DISC_PROFILES[dominant.profile].name.toLowerCase()}.`);
+      recommendations.push(
+        `Forte ${
+          DISC_PROFILES[dominant.profile].name
+        }: Desenvolva ainda mais suas características naturais de ${DISC_PROFILES[
+          dominant.profile
+        ].name.toLowerCase()}.`
+      );
     }
-    
+
     if (secondary.percentage >= 25) {
-      recommendations.push(`Perfil Híbrido: Sua combinação ${dominant.profile}/${secondary.profile} é uma grande vantagem em situações que requerem flexibilidade.`);
+      recommendations.push(
+        `Perfil Híbrido: Sua combinação ${dominant.profile}/${secondary.profile} é uma grande vantagem em situações que requerem flexibilidade.`
+      );
     }
-    
+
     sortedProfiles.forEach(({ profile, percentage }) => {
       if (percentage < 15) {
-        recommendations.push(`Oportunidade de Crescimento: Considere desenvolver mais características de ${DISC_PROFILES[profile].name} para maior versatilidade.`);
+        recommendations.push(
+          `Oportunidade de Crescimento: Considere desenvolver mais características de ${DISC_PROFILES[profile].name} para maior versatilidade.`
+        );
       }
     });
   } else {
     const sortedLanguages = Object.entries(percentages)
       .sort((a, b) => b[1] - a[1])
       .map(([key, value]) => ({ language: key, percentage: value }));
-    
+
     const primary = sortedLanguages[0];
     const secondary = sortedLanguages[1];
-    
+
     if (primary.percentage >= 35) {
-      recommendations.push(`Linguagem Principal: ${LOVE_LANGUAGES[primary.language].name} é claramente sua forma preferida de receber amor.`);
+      recommendations.push(
+        `Linguagem Principal: ${
+          LOVE_LANGUAGES[primary.language].name
+        } é claramente sua forma preferida de receber amor.`
+      );
     }
-    
+
     if (secondary.percentage >= 20) {
-      recommendations.push(`Linguagem Secundária: ${LOVE_LANGUAGES[secondary.language].name} também é importante para você.`);
+      recommendations.push(
+        `Linguagem Secundária: ${
+          LOVE_LANGUAGES[secondary.language].name
+        } também é importante para você.`
+      );
     }
-    
-    const balanced = sortedLanguages.filter(lang => lang.percentage >= 15 && lang.percentage <= 30);
+
+    const balanced = sortedLanguages.filter(
+      (lang) => lang.percentage >= 15 && lang.percentage <= 30
+    );
     if (balanced.length >= 3) {
-      recommendations.push("Perfil Equilibrado: Você aprecia múltiplas formas de expressar e receber amor, o que é uma grande vantagem nos relacionamentos.");
+      recommendations.push(
+        "Perfil Equilibrado: Você aprecia múltiplas formas de expressar e receber amor, o que é uma grande vantagem nos relacionamentos."
+      );
+    }
+  }
+
+  return recommendations;
+}
+
+// Função para adicionar cabeçalho moderno
+function addModernHeader(doc, title, subtitle = "", gradient = true) {
+  const pageWidth = doc.page.width;
+  const headerHeight = 120;
+  
+  if (gradient) {
+    // Simulação de gradiente com retângulos sobrepostos
+    for (let i = 0; i < 20; i++) {
+      const opacity = 0.8 - (i * 0.04);
+      doc
+        .rect(0, i * 3, pageWidth, 6)
+        .fillColor(COLORS.primary)
+        .fillOpacity(opacity)
+        .fill();
     }
   }
   
-  return recommendations;
+  // Título principal
+  doc
+    .fillColor('#FFFFFF')
+    .fillOpacity(1)
+    .fontSize(28)
+    .font('Helvetica-Bold')
+    .text(title, 50, 40, { align: 'center', width: pageWidth - 100 });
+    
+  if (subtitle) {
+    doc
+      .fontSize(16)
+      .font('Helvetica')
+      .text(subtitle, 50, 75, { align: 'center', width: pageWidth - 100 });
+  }
+  
+  doc.y = headerHeight + 20;
+}
+
+// Função para adicionar card com borda colorida
+function addCardSection(doc, title, content, color = COLORS.primary, spacing = 0.3) {
+  const cardMargin = 50;
+  const cardWidth = doc.page.width - (cardMargin * 2);
+  const startY = doc.y;
+  
+  // Verificar espaço para o card
+  if (doc.y > doc.page.height - 120) {
+    doc.addPage();
+  }
+  
+  // Fundo do card
+  doc
+    .rect(cardMargin, doc.y, cardWidth, 80)
+    .fillColor(COLORS.gray[50])
+    .fill();
+    
+  // Borda colorida à esquerda
+  doc
+    .rect(cardMargin, doc.y, 6, 80)
+    .fillColor(color)
+    .fill();
+    
+  // Título do card
+  doc
+    .fillColor(COLORS.gray[800])
+    .fontSize(14)
+    .font('Helvetica-Bold')
+    .text(title, cardMargin + 20, doc.y + 12);
+    
+  // Conteúdo
+  doc
+    .fontSize(11)
+    .font('Helvetica')
+    .fillColor(COLORS.gray[600])
+    .text(content, cardMargin + 20, doc.y + 32, { 
+      width: cardWidth - 40,
+      align: 'justify'
+    });
+    
+  doc.y = startY + 80 + (spacing * 20);
+}
+
+// Gráfico de barras aprimorado com descrições DISC
+function addEnhancedBarChart(doc, data, title, isDiscProfile = false) {
+  if (doc.y > doc.page.height - 350) {
+    doc.addPage();
+  }
+
+  // Título centralizado
+  doc
+    .fontSize(18)
+    .fillColor(COLORS.gray[800])
+    .font('Helvetica-Bold')
+    .text(title, { align: 'center' })
+    .moveDown(1);
+
+  const chartWidth = 400;
+  const chartHeight = 250;
+  const startX = (doc.page.width - chartWidth) / 2;
+  const startY = doc.y;
+
+  // Fundo do gráfico
+  doc
+    .rect(startX - 20, startY - 10, chartWidth + 40, chartHeight + 100)
+    .fillColor(COLORS.gray[50])
+    .stroke(COLORS.gray[200])
+    .fill();
+
+  const maxValue = Math.max(...Object.values(data));
+  const barWidth = chartWidth / Object.keys(data).length;
+  const colors = [COLORS.primary, COLORS.danger, COLORS.success, COLORS.warning];
+
+  Object.entries(data).forEach(([key, value], index) => {
+    const barHeight = (value / maxValue) * chartHeight;
+    const x = startX + index * barWidth;
+    const y = startY + chartHeight - barHeight;
+
+    // Sombra da barra
+    doc
+      .rect(x + 18, y + 3, barWidth - 30, barHeight)
+      .fillColor(COLORS.gray[300])
+      .fillOpacity(0.3)
+      .fill();
+
+    // Barra principal
+    doc
+      .rect(x + 15, y, barWidth - 30, barHeight)
+      .fillColor(colors[index % colors.length])
+      .fill();
+
+    // Badge com valor
+    const badgeWidth = 50;
+    const badgeHeight = 25;
+    const badgeX = x + (barWidth - badgeWidth) / 2;
+    const badgeY = y - 35;
+    
+    // Fundo do badge
+    doc
+      .roundedRect(badgeX, badgeY, badgeWidth, badgeHeight, 12)
+      .fillColor(colors[index % colors.length])
+      .fill();
+      
+    // Texto do badge
+    doc
+      .fontSize(11)
+      .fillColor('#FFFFFF')
+      .font('Helvetica-Bold')
+      .text(`${value}%`, badgeX, badgeY + 8, {
+        width: badgeWidth,
+        align: 'center'
+      });
+
+    // Label da categoria (letra DISC)
+    doc
+      .fontSize(16)
+      .fillColor(COLORS.gray[800])
+      .font('Helvetica-Bold')
+      .text(key, x + (barWidth / 2) - 8, startY + chartHeight + 15);
+
+    // Nome completo da categoria
+    if (isDiscProfile) {
+      const categoryNames = {
+        'D': 'Dominância',
+        'I': 'Influência', 
+        'S': 'Estabilidade',
+        'C': 'Conformidade'
+      };
+      
+      doc
+        .fontSize(9)
+        .fillColor(COLORS.gray[600])
+        .font('Helvetica')
+        .text(categoryNames[key] || key, x, startY + chartHeight + 35, {
+          width: barWidth,
+          align: 'center'
+        });
+    }
+  });
+
+  doc.y = startY + chartHeight + 70;
 }
 
 exports.generatePDFContent = async (result, profileData) => {
   try {
-    console.log("Gerando PDF completo para resultado:", result);
-    
+    console.log("Gerando PDF otimizado para resultado:", result);
+
     if (!result || !profileData) {
       throw new Error("Resultado ou dados do perfil ausentes");
     }
-    
+
     const scores = result.scores;
-    const isDiscProfile = scores.hasOwnProperty('D');
-    const profileType = isDiscProfile ? 'DISC' : 'LOVE';
-    
-    const { percentages, total } = calculatePercentages(scores);
-    
-    const profileName = result.profile || result.primaryLanguage || "Desconhecido";
+    const isDiscProfile = scores.hasOwnProperty("D");
+    const profileType = isDiscProfile ? "DISC" : "LOVE";
+
+    const { percentages } = calculatePercentages(scores);
+    const totalPoints = Object.values(scores).reduce(
+      (sum, score) => sum + score,
+      0
+    );
+    const totalAnswers = result.totalAnswers || result.answers?.length || 24;
+
+    const profileName =
+      result.profile || result.primaryLanguage || "Desconhecido";
     const profilesData = isDiscProfile ? DISC_PROFILES : LOVE_LANGUAGES;
-    
-    const doc = new PDFDocument({ 
-      size: 'A4', 
-      margin: 50,
+
+    const doc = new PDFDocument({
+      size: "A4",
+      margin: 0,
       info: {
         Title: `Relatório ${profileType} - ${result.name}`,
-        Author: "Sistema de Avaliação",
+        Author: "Sistema de Avaliação Profissional",
         Subject: `Análise de Perfil ${profileType}`,
-        Keywords: `${profileType}, perfil, análise, ${result.name}`
-      }
+        Keywords: `${profileType}, perfil, análise, ${result.name}`,
+      },
     });
-    
+
     const buffers = [];
     doc.on("data", (chunk) => buffers.push(chunk));
-    
+
     return new Promise((resolve, reject) => {
       doc.on("end", () => {
-        console.log("PDF completo finalizado");
+        console.log("PDF otimizado finalizado");
         resolve(Buffer.concat(buffers));
       });
-      
+
       doc.on("error", (err) => {
         console.error("Erro durante a criação do PDF:", err);
         reject(err);
       });
-      
-      function addSectionTitle(title, fontSize = 16) {
-        doc.fontSize(fontSize)
-           .fillColor('#2C3E50')
-           .text(title, { align: 'left' })
-           .moveDown(0.5);
-      }
-      
-      function addText(text, fontSize = 12) {
-        doc.fontSize(fontSize)
-           .fillColor('#2C3E50')
-           .text(text, { align: 'justify' })
-           .moveDown(0.3);
-      }
-      
-      function addList(items, bullet = '•') {
-        items.forEach(item => {
-          doc.fontSize(11)
-             .fillColor('#34495E')
-             .text(`${bullet} ${item}`, { indent: 20 })
-             .moveDown(0.2);
-        });
-        doc.moveDown(0.3);
-      }
-      
-      function addBarChart(data, title) {
-        doc.fontSize(14)
-           .fillColor('#2C3E50')
-           .text(title, { align: 'center' })
-           .moveDown(0.5);
-        
-        const chartWidth = 400;
-        const chartHeight = 200;
-        const startX = (doc.page.width - chartWidth) / 2;
-        const startY = doc.y;
-        
-        const maxValue = Math.max(...Object.values(data));
-        const barWidth = chartWidth / Object.keys(data).length;
-        
-        Object.entries(data).forEach(([key, value], index) => {
-          const barHeight = (value / maxValue) * chartHeight;
-          const x = startX + (index * barWidth);
-          const y = startY + chartHeight - barHeight;
-          
-          doc.rect(x + 10, y, barWidth - 20, barHeight)
-             .fillColor('#3498DB')
-             .fill();
-          
-          doc.fontSize(10)
-             .fillColor('#2C3E50')
-             .text(key, x, startY + chartHeight + 10, { width: barWidth, align: 'center' });
-          
-          doc.fontSize(10)
-             .fillColor('#FFFFFF')
-             .text(`${value}%`, x, y + barHeight/2, { width: barWidth, align: 'center' });
-        });
-        
-        doc.y = startY + chartHeight + 40;
-      }
-      
-      doc.fontSize(28)
-         .fillColor('#2C3E50')
-         .text(`RELATÓRIO DE PERFIL ${profileType}`, { align: 'center' })
-         .moveDown(1);
-      
-      doc.fontSize(18)
-         .fillColor('#7F8C8D')
-         .text('Análise Completa e Detalhada', { align: 'center' })
-         .moveDown(2);
-      
-      doc.fontSize(16)
-         .fillColor('#2C3E50')
-         .text(`Nome: ${result.name}`)
-         .moveDown(0.5);
-      
-      doc.fontSize(16)
-         .text(`Data: ${new Date(result.date).toLocaleDateString('pt-BR')}`)
-         .moveDown(0.5);
-      
-      doc.fontSize(16)
-         .text(`Perfil Principal: ${profileName}`)
-         .moveDown(0.5);
-      
-      doc.fontSize(16)
-         .text(`Total de Respostas: ${total}`)
-         .moveDown(2);
-      
-      addSectionTitle('RESUMO EXECUTIVO', 18);
-      addText(`Este relatório apresenta uma análise completa do perfil ${profileType} de ${result.name}, baseada em ${total} respostas coletadas. O perfil principal identificado é ${profileName}, com características específicas que serão detalhadas ao longo deste documento.`);
-      
+
+      // === CAPA MODERNA ===
+      addModernHeader(
+        doc, 
+        `RELATÓRIO ${profileType}`,
+        "Análise Comportamental Completa"
+      );
+
+      // Informações principais em cards
+      doc
+        .fontSize(20)
+        .fillColor(COLORS.gray[800])
+        .font('Helvetica-Bold')
+        .text(result.name, { align: 'center' })
+        .moveDown(0.5);
+
+      doc
+        .fontSize(14)
+        .fillColor(COLORS.gray[600])
+        .font('Helvetica')
+        .text(`Data: ${new Date(result.date).toLocaleDateString("pt-BR")}`, { align: 'center' })
+        .text(`Perfil: ${profileName}`, { align: 'center' })
+        .text(`${totalAnswers} respostas • ${totalPoints} pontos`, { align: 'center' })
+        .moveDown(2);
+
+      // Gráfico principal melhorado com descrições DISC
+      addEnhancedBarChart(doc, percentages, 'Distribuição do Perfil', isDiscProfile);
+
+      // === PÁGINA 2: ANÁLISE DETALHADA ===
       doc.addPage();
-      addSectionTitle('DISTRIBUIÇÃO DO PERFIL', 18);
-      addBarChart(percentages, 'Porcentagem por Categoria');
       
-      addSectionTitle('PONTUAÇÃO DETALHADA');
-      doc.fontSize(12)
-         .fillColor('#2C3E50')
-         .text('Categoria', 70, doc.y, { continued: true })
-         .text('Pontuação', 200, doc.y, { continued: true })
-         .text('Porcentagem', 300, doc.y, { continued: true })
-         .text('Classificação', 400, doc.y)
-         .moveDown(0.5);
-      
-      doc.moveTo(50, doc.y)
-         .lineTo(550, doc.y)
-         .strokeColor('#BDC3C7')
-         .stroke()
-         .moveDown(0.5);
-      
+      addCardSection(
+        doc,
+        'RESUMO EXECUTIVO',
+        `Este relatório apresenta uma análise completa do perfil ${profileType} de ${result.name}, baseada em ${totalAnswers} respostas. A avaliação identificou ${profileName} como perfil dominante, oferecendo insights valiosos para desenvolvimento pessoal e profissional.`,
+        COLORS.primary
+      );
+
+      // Tabela de pontuação estilizada CORRIGIDA
       const sortedData = Object.entries(scores)
         .sort((a, b) => b[1] - a[1])
-        .map(([key, value], index) => {
+        .map(([key, value]) => {
           const percentage = percentages[key];
-          let classification = '';
-          if (percentage >= 35) classification = 'Dominante';
-          else if (percentage >= 25) classification = 'Forte';
-          else if (percentage >= 15) classification = 'Moderado';
-          else classification = 'Baixo';
-          
-          return { key, value, percentage, classification, rank: index + 1 };
+          let classification = "";
+          if (percentage >= 35) classification = "Dominante";
+          else if (percentage >= 25) classification = "Forte";
+          else if (percentage >= 15) classification = "Moderado";
+          else classification = "Baixo";
+
+          const categoryName = isDiscProfile
+            ? DISC_PROFILES[key]?.name || key
+            : LOVE_LANGUAGES[key]?.name || key;
+
+          return [categoryName, value.toString(), `${percentage}%`, classification];
         });
-      
-      sortedData.forEach(({ key, value, percentage, classification }) => {
-        const categoryName = isDiscProfile ? DISC_PROFILES[key].name : LOVE_LANGUAGES[key].name;
-        doc.fontSize(11)
-           .fillColor('#34495E')
-           .text(categoryName, 70, doc.y, { continued: true })
-           .text(value.toString(), 200, doc.y, { continued: true })
-           .text(`${percentage}%`, 300, doc.y, { continued: true })
-           .text(classification, 400, doc.y)
-           .moveDown(0.4);
+
+      doc
+        .fontSize(16)
+        .fillColor(COLORS.gray[800])
+        .font('Helvetica-Bold')
+        .text('PONTUAÇÃO DETALHADA', 50, doc.y + 20)
+        .moveDown(1);
+
+      // Tabela com alinhamento correto
+      const tableX = 50;
+      const tableWidth = doc.page.width - 100;
+      const headers = ['Categoria', 'Pontos', 'Percentual', 'Classificação'];
+      const colWidths = [150, 80, 100, 120]; // Larguras fixas para cada coluna
+      const rowHeight = 35;
+
+      // Cabeçalho
+      doc
+        .rect(tableX, doc.y, tableWidth, rowHeight)
+        .fillColor(COLORS.primary)
+        .fill();
+
+      let currentX = tableX;
+      headers.forEach((header, index) => {
+        doc
+          .fontSize(11)
+          .fillColor('#FFFFFF')
+          .font('Helvetica-Bold')
+          .text(header, currentX + 10, doc.y + 12, {
+            width: colWidths[index] - 20
+          });
+        currentX += colWidths[index];
       });
-      
+
+      doc.y += rowHeight;
+
+      // Linhas de dados
+      sortedData.forEach((row, rowIndex) => {
+        const bgColor = rowIndex % 2 === 0 ? COLORS.gray[50] : '#FFFFFF';
+        
+        doc
+          .rect(tableX, doc.y, tableWidth, rowHeight)
+          .fillColor(bgColor)
+          .fill();
+
+        let currentX = tableX;
+        row.forEach((cell, cellIndex) => {
+          doc
+            .fontSize(10)
+            .fillColor(COLORS.gray[700])
+            .font('Helvetica')
+            .text(cell.toString(), currentX + 10, doc.y + 12, {
+              width: colWidths[cellIndex] - 20
+            });
+          currentX += colWidths[cellIndex];
+        });
+
+        doc.y += rowHeight;
+      });
+
+      // === PÁGINA 3: ANÁLISE POR CATEGORIA ===
       doc.addPage();
-      addSectionTitle('ANÁLISE DETALHADA POR CATEGORIA', 18);
       
-      sortedData.forEach(({ key, percentage }, index) => {
-        const categoryData = profilesData[key];
-        const isSignificant = percentage >= 15;
-        
-        if (index > 0) doc.addPage();
-        
-        addSectionTitle(`${categoryData.name} (${percentage}%)`, 16);
-        
-        if (isSignificant) {
-          addText(categoryData.description);
+      doc
+        .fontSize(18)
+        .fillColor(COLORS.gray[800])
+        .font('Helvetica-Bold')
+        .text('ANÁLISE DETALHADA POR CATEGORIA', 50, 50)
+        .moveDown(1);
+
+      Object.entries(percentages)
+        .sort((a, b) => b[1] - a[1])
+        .forEach(([key, percentage], index) => {
+          const categoryData = profilesData[key];
+          if (!categoryData) return;
+
+          const colors = [COLORS.primary, COLORS.secondary, COLORS.accent, COLORS.warning, COLORS.success];
           
-          addSectionTitle('Características Principais:', 14);
-          addList(categoryData.characteristics);
-          
-          addSectionTitle('Pontos Fortes:', 14);
-          addList(categoryData.strengths || categoryData.howToShow);
-          
-          addSectionTitle('Desafios e Áreas de Atenção:', 14);
-          addList(categoryData.challenges || categoryData.whatToAvoid);
-          
-          if (isDiscProfile) {
-            addSectionTitle('Estilo de Trabalho:', 14);
-            addText(categoryData.workStyle);
-            
-            addSectionTitle('Comunicação:', 14);
-            addText(categoryData.communication);
-            
-            addSectionTitle('Motivação:', 14);
-            addText(categoryData.motivation);
-          } else {
-            addSectionTitle('Como Expressar Esta Linguagem:', 14);
-            addList(categoryData.howToShow);
-            
-            addSectionTitle('Dicas Práticas:', 14);
-            addList(categoryData.practicalTips);
+          // Título da categoria com espaçamento reduzido
+          doc
+            .fontSize(14)
+            .fillColor(colors[index % colors.length])
+            .font('Helvetica-Bold')
+            .text(`${categoryData.name} (${percentage}%)`, 50)
+            .moveDown(0.2); // Espaçamento reduzido
+
+          // Descrição
+          doc
+            .fontSize(11)
+            .fillColor(COLORS.gray[600])
+            .font('Helvetica')
+            .text(categoryData.description, 50, doc.y, { width: doc.page.width - 100 })
+            .moveDown(0.3);
+
+          if (percentage >= 15) {
+            // Características em lista compacta
+            doc
+              .fontSize(12)
+              .fillColor(COLORS.gray[700])
+              .font('Helvetica-Bold')
+              .text('Principais Características:', 70)
+              .moveDown(0.2);
+
+            categoryData.characteristics.slice(0, 3).forEach(char => {
+              doc
+                .fontSize(10)
+                .fillColor(COLORS.gray[600])
+                .font('Helvetica')
+                .text(`• ${char}`, 90, doc.y, { width: doc.page.width - 140 })
+                .moveDown(0.15);
+            });
+
+            doc.moveDown(0.4);
           }
-        } else {
-          addText(`Com ${percentage}% de representação, esta categoria tem baixa influência no seu perfil atual. Isso pode representar uma oportunidade de desenvolvimento ou simplesmente uma característica menos dominante em sua personalidade.`);
-          
-          addSectionTitle('Potencial de Desenvolvimento:', 14);
-          addText(`Considere desenvolver mais características de ${categoryData.name.toLowerCase()} para aumentar sua versatilidade e eficácia em diferentes situações.`);
-        }
+        });
+
+      // === PÁGINA 4: RECOMENDAÇÕES ===
+      doc.addPage();
+
+      const recommendations = generatePersonalizedRecommendations(
+        profileType,
+        profileName,
+        percentages
+      );
+
+      addCardSection(
+        doc,
+        'RECOMENDAÇÕES PERSONALIZADAS',
+        'Baseadas na sua análise individual, desenvolvemos recomendações específicas para potencializar seus pontos fortes.',
+        COLORS.success,
+        0.2
+      );
+
+      recommendations.forEach(rec => {
+        doc
+          .fontSize(11)
+          .fillColor(COLORS.gray[600])
+          .font('Helvetica')
+          .text(`• ${rec}`, 70, doc.y, { width: doc.page.width - 140 })
+          .moveDown(0.3);
       });
+
+      // === PRÓXIMOS PASSOS SIMPLIFICADOS ===
+      doc.moveDown(1);
       
-      doc.addPage();
-      addSectionTitle('ANÁLISE COMBINADA E RECOMENDAÇÕES', 18);
-      
-      const recommendations = generatePersonalizedRecommendations(profileType, profileName, percentages);
-      
-      addSectionTitle('Perfil Integrado:', 14);
-      if (isDiscProfile) {
-        const combinedAnalysis = generateCombinedDiscAnalysis(profileName, percentages);
-        addText(combinedAnalysis.description);
-        
-        addSectionTitle('Características Combinadas:', 14);
-        addList(combinedAnalysis.combinedTraits);
-      } else {
-        const primaryLanguage = sortedData[0];
-        const secondaryLanguage = sortedData[1];
-        
-        addText(`Sua linguagem principal do amor é ${profilesData[primaryLanguage.key].name} (${primaryLanguage.percentage}%), complementada por ${profilesData[secondaryLanguage.key].name} (${secondaryLanguage.percentage}%). Esta combinação oferece uma rica variedade de formas de dar e receber amor.`);
-      }
-      
-      addSectionTitle('Recomendações Personalizadas:', 14);
-      addList(recommendations);
-      
-      doc.addPage();
-      addSectionTitle('PLANO DE DESENVOLVIMENTO PESSOAL', 18);
-      
-      addSectionTitle('Áreas de Força para Potencializar:', 14);
-      const strongAreas = sortedData.filter(item => item.percentage >= 25);
-      strongAreas.forEach(({ key, percentage }) => {
-        const categoryData = profilesData[key];
-        addText(`• ${categoryData.name} (${percentage}%): Continue desenvolvendo estas características naturais, pois representam seus principais pontos fortes.`);
+      doc
+        .fontSize(16)
+        .fillColor(COLORS.gray[800])
+        .font('Helvetica-Bold')
+        .text('PRÓXIMOS PASSOS', 50)
+        .moveDown(0.5);
+
+      const actionItems = [
+        'Identifique 2-3 áreas prioritárias para desenvolvimento',
+        'Pratique conscientemente novos comportamentos',
+        'Busque feedback regular de pessoas de confiança',
+        'Acompanhe seu progresso periodicamente'
+      ];
+
+      actionItems.forEach((item, index) => {
+        doc
+          .fontSize(11)
+          .fillColor(COLORS.gray[600])
+          .font('Helvetica')
+          .text(`${index + 1}. ${item}`, 70, doc.y, { width: doc.page.width - 140 })
+          .moveDown(0.4);
       });
-      
-      addSectionTitle('Áreas de Oportunidade:', 14);
-      const developmentAreas = sortedData.filter(item => item.percentage < 20);
-      developmentAreas.forEach(({ key, percentage }) => {
-        const categoryData = profilesData[key];
-        addText(`• ${categoryData.name} (${percentage}%): Considere desenvolver mais estas características para maior versatilidade e eficácia.`);
-      });
-      
-      addSectionTitle('Estratégias de Desenvolvimento:', 14);
-      if (isDiscProfile) {
-        addText("Para desenvolvimento do perfil DISC, considere:");
-        addList([
-          "Participar de atividades que desafiem suas áreas menos desenvolvidas",
-          "Buscar feedback de colegas sobre diferentes situações",
-          "Praticar flexibilidade comportamental em contextos variados",
-          "Estudar e observar pessoas com perfis complementares",
-          "Desenvolver autoconsciência sobre seus padrões de comportamento"
-        ]);
-      } else {
-        addText("Para desenvolvimento das linguagens do amor, considere:");
-        addList([
-          "Experimentar expressar amor através de diferentes linguagens",
-          "Comunicar suas necessidades para parceiros e família",
-          "Observar como outros preferem receber amor",
-          "Praticar linguagens menos desenvolvidas regularmente",
-          "Criar um plano de relacionamento baseado nestas descobertas"
-        ]);
-      }
-      
-      doc.addPage();
-      addSectionTitle('APLICAÇÕES PRÁTICAS', 18);
-      
-      if (isDiscProfile) {
-        addSectionTitle('No Ambiente de Trabalho:', 14);
-        const primaryProfile = DISC_PROFILES[sortedData[0].key];
-        addText(`Com base no seu perfil ${primaryProfile.name}, você provavelmente se destaca em:`);
-        addList([
-          `Situações que exigem ${primaryProfile.name.toLowerCase()}`,
-          "Ambientes alinhados com suas características naturais",
-          "Funções que aproveitam seus pontos fortes principais"
-        ]);
-        
-        addSectionTitle('Em Relacionamentos Interpessoais:', 14);
-        addText("Para melhorar seus relacionamentos:");
-        addList([
-          "Identifique os perfis DISC de pessoas próximas",
-          "Adapte sua comunicação aos diferentes estilos",
-          "Desenvolva empatia por estilos diferentes do seu",
-          "Pratique flexibilidade comportamental"
-        ]);
-        
-        addSectionTitle('Em Situações de Liderança:', 14);
-        addText("Como líder, considere:");
-        addList([
-          "Suas tendências naturais de liderança",
-          "Como motivar pessoas com perfis diferentes",
-          "Estratégias para desenvolver uma liderança mais completa",
-          "Formas de compensar possíveis pontos cegos"
-        ]);
-        
-      } else {
-        addSectionTitle('Em Relacionamentos Amorosos:', 14);
-        const primaryLanguage = LOVE_LANGUAGES[sortedData[0].key];
-        addText(`Sua linguagem principal sendo ${primaryLanguage.name}, é importante:`);
-        addList([
-          "Comunicar esta necessidade para seu parceiro",
-          "Reconhecer quando está sendo amado desta forma",
-          "Não assumir que outros têm a mesma linguagem",
-          "Aprender a linguagem do amor do seu parceiro"
-        ]);
-        
-        addSectionTitle('Em Relacionamentos Familiares:', 14);
-        addText("Para melhorar relacionamentos familiares:");
-        addList([
-          "Identifique as linguagens do amor dos familiares",
-          "Pratique expressar amor de formas variadas",
-          "Seja paciente com diferenças nas linguagens",
-          "Crie tradições que honrem diferentes linguagens"
-        ]);
-        
-        addSectionTitle('Em Relacionamentos de Amizade:', 14);
-        addText("Para fortalecer amizades:");
-        addList([
-          "Observe como seus amigos preferem receber afeto",
-          "Varie suas formas de demonstrar carinho",
-          "Comunique suas próprias necessidades",
-          "Respeite as diferenças individuais"
-        ]);
-      }
-      
-      doc.addPage();
-      addSectionTitle('AUTOCONHECIMENTO E REFLEXÃO', 18);
-      
-      addSectionTitle('Perguntas para Reflexão:', 14);
-      if (isDiscProfile) {
-        addText("Reflita sobre estas questões para aprofundar seu autoconhecimento:");
-        addList([
-          "Como seu perfil DISC se manifesta em diferentes situações?",
-          "Que situações trazem o melhor e o pior de você?",
-          "Como você pode usar seus pontos fortes mais efetivamente?",
-          "Que características você gostaria de desenvolver mais?",
-          "Como seu perfil afeta seus relacionamentos?",
-          "Que estratégias você pode usar para se adaptar a diferentes situações?",
-          "Como você pode contribuir melhor em equipes?"
-        ]);
-      } else {
-        addText("Reflita sobre estas questões para aprofundar seu autoconhecimento:");
-        addList([
-          "Como você prefere receber amor e afeto?",
-          "De que formas você naturalmente expressa amor?",
-          "Que linguagens do amor você tem dificuldade em compreender?",
-          "Como você pode comunicar melhor suas necessidades?",
-          "Que padrões você identifica em seus relacionamentos?",
-          "Como você pode se tornar mais versátil em expressar amor?",
-          "Que tradições você pode criar baseadas nestas descobertas?"
-        ]);
-      }
-      
-      addSectionTitle('Exercícios de Desenvolvimento:', 14);
-      if (isDiscProfile) {
-        addList([
-          "Observe seu comportamento em diferentes contextos por uma semana",
-          "Peça feedback sobre seu estilo de comunicação",
-          "Pratique adaptar seu estilo a diferentes pessoas",
-          "Identifique situações onde você se sente mais e menos confortável",
-          "Desenvolva estratégias para lidar com seus desafios"
-        ]);
-      } else {
-        addList([
-          "Experimente expressar amor através de diferentes linguagens por um mês",
-          "Observe as reações das pessoas às suas demonstrações de afeto",
-          "Identifique as linguagens do amor de pessoas próximas",
-          "Pratique comunicar suas necessidades claramente",
-          "Crie um plano de relacionamento baseado nestas descobertas"
-        ]);
-      }
-      
-      doc.addPage();
-      addSectionTitle('CONCLUSÃO E PRÓXIMOS PASSOS', 18);
-      
-      addText(`Este relatório apresentou uma análise completa do seu perfil ${profileType}, baseada em ${total} respostas. Seu perfil principal ${profileName} representa ${sortedData[0].percentage}% do seu resultado, seguido por ${profilesData[sortedData[1].key].name} com ${sortedData[1].percentage}%.`);
-      
-      addSectionTitle('Principais Descobertas:', 14);
-      addList([
-        `Seu perfil principal é ${profileName} (${sortedData[0].percentage}%)`,
-        `Sua segunda característica mais forte é ${profilesData[sortedData[1].key].name} (${sortedData[1].percentage}%)`,
-        `Suas características menos desenvolvidas oferecem oportunidades de crescimento`,
-        `Seu perfil único oferece tanto pontos fortes quanto áreas de desenvolvimento`
-      ]);
-      
-      addSectionTitle('Recomendações Finais:', 14);
-      addList([
-        "Use este relatório como base para autoconhecimento contínuo",
-        "Compartilhe descobertas relevantes com pessoas próximas",
-        "Implemente gradualmente as estratégias sugeridas",
-        "Monitore seu progresso e ajuste suas abordagens",
-        "Considere fazer nova avaliação em 6-12 meses"
-      ]);
-      
-      addSectionTitle('Próximos Passos:', 14);
-      addText("Para maximizar o valor desta análise:");
-      addList([
-        "Escolha 2-3 áreas específicas para focar nos próximos meses",
-        "Crie um plano de desenvolvimento pessoal",
-        "Busque feedback regular de pessoas de confiança",
-        "Pratique conscientemente novos comportamentos",
-        "Mantenha um diário de reflexão sobre seu progresso"
-      ]);
-      
-      addSectionTitle('Recursos para Desenvolvimento Contínuo:', 14);
-      if (isDiscProfile) {
-        addList([
-          "Livros sobre perfis comportamentais e liderança",
-          "Cursos de desenvolvimento de soft skills",
-          "Coaching profissional especializado em DISC",
-          "Workshops de trabalho em equipe",
-          "Ferramentas de feedback 360 graus"
-        ]);
-      } else {
-        addList([
-          "Livros sobre relacionamentos e comunicação",
-          "Cursos de comunicação não-violenta",
-          "Terapia de casal ou familiar",
-          "Workshops sobre inteligência emocional",
-          "Grupos de apoio para desenvolvimento pessoal"
-        ]);
-      }
-      
-      doc.fontSize(10)
-         .fillColor('#7F8C8D')
-         .text(`Este relatório foi gerado em ${new Date().toLocaleDateString('pt-BR')} e representa uma análise baseada nas respostas fornecidas em ${new Date(result.date).toLocaleDateString('pt-BR')}. Para melhores resultados, recomenda-se revisitar esta avaliação periodicamente.`, { align: 'center' });
-      
+
+      // Rodapé final
+      doc
+        .fontSize(10)
+        .fillColor(COLORS.gray[500])
+        .font('Helvetica')
+        .text(
+          `Relatório gerado em ${new Date().toLocaleDateString('pt-BR')} • Sistema de Avaliação Profissional`,
+          50,
+          doc.page.height - 50,
+          { align: 'center', width: doc.page.width - 100 }
+        );
+
       doc.end();
     });
   } catch (err) {
-    console.error("Erro ao gerar PDF completo:", {
+    console.error("Erro ao gerar PDF otimizado:", {
       message: err.message,
       stack: err.stack,
       result,
@@ -891,22 +987,24 @@ exports.generatePDFContent = async (result, profileData) => {
   }
 };
 
+// ... keep existing code (remaining functions)
+
 function calculateHybridDiscProfile(scores) {
   const sortedScores = Object.entries(scores)
     .sort((a, b) => b[1] - a[1])
     .map(([key, value]) => ({ profile: key, score: value }));
-  
+
   const primary = sortedScores[0];
   const secondary = sortedScores[1];
   const total = Object.values(scores).reduce((sum, score) => sum + score, 0);
-  
+
   const primaryPercentage = (primary.score / total) * 100;
   const secondaryPercentage = (secondary.score / total) * 100;
-  
+
   if (secondaryPercentage >= primaryPercentage * 0.6) {
     return `${primary.profile}${secondary.profile}`;
   }
-  
+
   return primary.profile;
 }
 
@@ -914,22 +1012,25 @@ function calculateDominantLoveLanguage(scores) {
   const sortedScores = Object.entries(scores)
     .sort((a, b) => b[1] - a[1])
     .map(([key, value]) => ({ language: key, score: value }));
-  
+
   const primary = sortedScores[0];
   const secondary = sortedScores[1];
   const total = Object.values(scores).reduce((sum, score) => sum + score, 0);
-  
+
   const primaryPercentage = (primary.score / total) * 100;
   const secondaryPercentage = (secondary.score / total) * 100;
-  
-  if (primaryPercentage >= 30 && primaryPercentage > secondaryPercentage * 1.3) {
+
+  if (
+    primaryPercentage >= 30 &&
+    primaryPercentage > secondaryPercentage * 1.3
+  ) {
     return primary.language;
   }
-  
+
   if (Math.abs(primaryPercentage - secondaryPercentage) <= 5) {
     return `${primary.language}/${secondary.language}`;
   }
-  
+
   return primary.language;
 }
 
@@ -937,5 +1038,3 @@ exports.calculatePercentages = calculatePercentages;
 exports.generatePersonalizedRecommendations = generatePersonalizedRecommendations;
 exports.calculateHybridDiscProfile = calculateHybridDiscProfile;
 exports.calculateDominantLoveLanguage = calculateDominantLoveLanguage;
-exports.DISC_PROFILES = DISC_PROFILES;
-exports.LOVE_LANGUAGES = LOVE_LANGUAGES;
