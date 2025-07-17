@@ -16,19 +16,19 @@ const resultSchema = new mongoose.Schema({
       "D",
       "I",
       "S",
-      "C", // Perfis primários
+      "C", 
       "DI",
       "DS",
-      "DC", // Combinações com D primário
+      "DC", 
       "ID",
       "IS",
-      "IC", // Combinações com I primário
+      "IC", 
       "SD",
       "SI",
-      "SC", // Combinações com S primário
+      "SC", 
       "CD",
       "CI",
-      "CS", // Combinações com C primário
+      "CS", 
     ],
     required: true,
   },

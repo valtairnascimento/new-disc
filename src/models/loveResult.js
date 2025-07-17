@@ -14,13 +14,11 @@ const loveResultSchema = new mongoose.Schema({
   primaryLanguage: {
     type: String,
     enum: [
-      // Linguagens primárias
       "Words",
       "Acts",
       "Gifts",
       "Time",
       "Touch",
-      // Combinações (ordem alfabética para consistência)
       "Acts/Gifts",
       "Acts/Time",
       "Acts/Touch",

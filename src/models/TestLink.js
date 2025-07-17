@@ -6,7 +6,7 @@ const testLinkSchema = new mongoose.Schema({
   testType: {
     type: String,
     required: true,
-    enum: ["disc", "love-languages"], // Inclui ambos os tipos de teste
+    enum: ["disc", "love-languages"], 
   },
   testName: { type: String, required: false, default: null },
   email: { type: String, default: null },

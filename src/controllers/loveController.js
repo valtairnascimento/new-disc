@@ -214,7 +214,7 @@ exports.createLoveTestLink = async (req, res) => {
     const { testName } = req.body;
 
     const token = crypto.randomBytes(16).toString("hex");
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1h de validade
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); 
 
     const testLink = await TestLink.create({
       token,

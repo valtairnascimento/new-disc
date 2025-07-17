@@ -1,61 +1,3 @@
-// const LoveQuestion = require("../models/loveQuestion");
-
-// exports.calculateLoveProfile = async (answers) => {
-//   try {
-//     console.log("Iniciando cálculo do perfil com respostas:", answers);
-//     const questionIds = answers.map((a) => a.questionId);
-//     const questions = await LoveQuestion.find({ _id: { $in: questionIds } });
-
-//     const scores = {
-//       Words: 0,
-//       Acts: 0,
-//       Gifts: 0,
-//       Time: 0,
-//       Touch: 0,
-//     };
-
-//     answers.forEach((answer) => {
-//       const question = questions.find(
-//         (q) => q._id.toString() === answer.questionId
-//       );
-//       if (question && scores.hasOwnProperty(question.type)) {
-//         scores[question.type] += answer.value;
-//       }
-//     });
-//     console.log("Scores calculados:", scores);
-
-//     const maxScore = Math.max(...Object.values(scores));
-//     const topLanguages = Object.keys(scores).filter(
-//       (key) => scores[key] === maxScore
-//     );
-
-//     console.log("Linguagens com maior pontuação:", topLanguages);
-
-//     let primaryLanguage;
-//     if (topLanguages.length === 1) {
-//       primaryLanguage = topLanguages[0];
-//     } else if (topLanguages.length === 2) {
-//       primaryLanguage = topLanguages.join("/");
-//     } else {
-//       // Em caso de empate entre 3 ou mais, escolher a primeira (ex.: Acts)
-//       primaryLanguage = topLanguages[0];
-//       console.log(
-//         "Empate entre múltiplas linguagens, selecionando a primeira:",
-//         primaryLanguage
-//       );
-//     }
-
-//     return { scores, primaryLanguage };
-//   } catch (err) {
-//     console.error("Erro ao calcular perfil:", {
-//       message: err.message,
-//       stack: err.stack,
-//     });
-//     throw err;
-//   }
-// };
-
-
 const LoveQuestion = require("../models/loveQuestion");
 const { normalizeProfileName } = require("../utils/normalize");
 
@@ -74,7 +16,6 @@ exports.calculateLoveProfile = async (answers) => {
       Touch: 0,
     };
 
-    // Calcular scores básicos
     answers.forEach((answer) => {
       const question = questions.find(
         (q) => q._id.toString() === answer.questionId
@@ -86,7 +27,6 @@ exports.calculateLoveProfile = async (answers) => {
     
     console.log("Scores calculados:", scores);
 
-    // Calcular total e porcentagens
     const total = Object.values(scores).reduce((sum, score) => sum + score, 0);
     const percentages = {};
     
@@ -96,7 +36,6 @@ exports.calculateLoveProfile = async (answers) => {
 
     console.log("Porcentagens calculadas:", percentages);
 
-    // Análise mais sofisticada para determinar linguagem primária
     const sortedLanguages = Object.entries(percentages)
       .sort((a, b) => b[1] - a[1])
       .map(([key, value]) => ({ language: key, percentage: value }));
@@ -108,28 +47,23 @@ exports.calculateLoveProfile = async (answers) => {
     let primaryLanguage;
     let analysisType;
 
-    // Linguagem claramente dominante (>= 30% e 1.3x maior que a segunda)
     if (primary.percentage >= 30 && primary.percentage >= secondary.percentage * 1.3) {
       primaryLanguage = primary.language;
       analysisType = "dominant";
     }
-    // Duas linguagens próximas (diferença <= 5%)
     else if (Math.abs(primary.percentage - secondary.percentage) <= 5 && primary.percentage >= 20) {
      primaryLanguage = normalizeProfileName(`${primary.language}/${secondary.language}`);
       analysisType = "balanced_dual";
     }
-    // Três linguagens equilibradas
     else if (primary.percentage <= 25 && secondary.percentage >= 18 && third.percentage >= 15) {
       primaryLanguage = normalizeProfileName(`${primary.language}/${secondary.language}/${third.language}`);
 
       analysisType = "balanced_multiple";
     }
-    // Linguagem moderadamente dominante
     else if (primary.percentage >= 25) {
       primaryLanguage = primary.language;
       analysisType = "moderate";
     }
-    // Perfil muito equilibrado
     else {
       primaryLanguage = primary.language;
       analysisType = "balanced";
@@ -137,7 +71,6 @@ exports.calculateLoveProfile = async (answers) => {
 
     console.log("Linguagem primária determinada:", primaryLanguage, "Tipo:", analysisType);
 
-    // Análise adicional
     const analysis = {
       primaryLanguage,
       analysisType,
@@ -164,7 +97,6 @@ exports.calculateLoveProfile = async (answers) => {
   }
 };
 
-// Função auxiliar para determinar nível de força da linguagem
 function getStrengthLevel(percentage) {
   if (percentage >= 35) return "Muito Forte";
   if (percentage >= 25) return "Forte";
@@ -173,7 +105,6 @@ function getStrengthLevel(percentage) {
   return "Muito Fraco";
 }
 
-// Função auxiliar para gerar recomendações rápidas
 function generateQuickRecommendations(sortedLanguages, analysisType) {
   const recommendations = [];
   
@@ -206,7 +137,6 @@ function generateQuickRecommendations(sortedLanguages, analysisType) {
   return recommendations;
 }
 
-// Função para análise detalhada do perfil
 exports.getDetailedLoveAnalysis = (scores, primaryLanguage, percentages) => {
   const analysis = {
     profileType: "Linguagens do Amor",
@@ -219,7 +149,6 @@ exports.getDetailedLoveAnalysis = (scores, primaryLanguage, percentages) => {
     developmentAreas: []
   };
 
-  // Interpretar cada linguagem
   Object.entries(percentages).forEach(([language, percentage]) => {
     let interpretation = "";
     let recommendation = "";
@@ -251,7 +180,6 @@ exports.getDetailedLoveAnalysis = (scores, primaryLanguage, percentages) => {
   return analysis;
 };
 
-// Função para comparar perfis (útil para casais)
 exports.compareLoveProfiles = (profile1, profile2) => {
   const comparison = {
     compatibility: 0,
@@ -260,7 +188,6 @@ exports.compareLoveProfiles = (profile1, profile2) => {
     recommendations: []
   };
 
-  // Calcular compatibilidade básica
   Object.keys(profile1.percentages).forEach(language => {
     const diff = Math.abs(profile1.percentages[language] - profile2.percentages[language]);
     comparison.compatibility += (100 - diff) / 100;
@@ -283,7 +210,6 @@ exports.compareLoveProfiles = (profile1, profile2) => {
 
   comparison.compatibility = Math.round((comparison.compatibility / 5) * 100);
 
-  // Gerar recomendações para o casal
   if (comparison.compatibility >= 70) {
     comparison.recommendations.push("Vocês têm preferências muito similares nas linguagens do amor");
   } else if (comparison.compatibility >= 50) {
