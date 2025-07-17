@@ -1,4 +1,5 @@
-const { generateDiscReportPDF } = require("./generatePdfService");
+const { generateDiscReportPDF } = require("./generateDiscPdfService");
+const { generateLoveReportPDF } = require("./generateLovePdfService");
 const { DISC_PROFILES } = require("../utils/discData");
 const { LOVE_LANGUAGES } = require("../utils/loveData");
 const { getDetailedDiscAnalysis } = require("../services/discService");
@@ -79,6 +80,7 @@ exports.generatePDFContent = async (result, profileData) => {
   };
 
   const pdfData = {
+    profileType: isDisc ? "DISC" : "LOVE",
     name: result.name,
     date: result.date,
     profileName: profile,
@@ -90,5 +92,7 @@ exports.generatePDFContent = async (result, profileData) => {
     conclusion,
   };
 
-  return await generateDiscReportPDF(pdfData);
+  return isDisc
+    ? await generateDiscReportPDF(pdfData)
+    : await generateLoveReportPDF(pdfData);
 };

@@ -6,6 +6,7 @@ const loveService = require("../services/loveService");
 const pdfService = require("../services/pdfService");
 const crypto = require("crypto");
 const mongoose = require("mongoose");
+const { normalizeProfileName } = require("../utils/normalize");
 
 const profileNameMap = {
   Words: "Palavras de Afirmação",
@@ -85,15 +86,17 @@ exports.submitLoveAnswers = async (req, res) => {
       answers
     );
 
-    const profileData = await LoveProfile.findOne({ profile: primaryLanguage });
-
+    const normalizedProfile = normalizeProfileName(primaryLanguage);
+    const profileData = await LoveProfile.findOne({
+      profile: normalizedProfile,
+    });
     if (!profileData) {
       throw new Error(`Perfil não encontrado: ${primaryLanguage}`);
     }
 
     const savedResult = await LoveResult.create({
       scores,
-      primaryLanguage,
+      primaryLanguage: normalizedProfile,
       name: name || testLink.testName || "Usuário Anônimo",
       date: new Date(),
       status: "completed",
@@ -191,7 +194,6 @@ exports.getLoveResults = async (req, res) => {
       email: result.email || "-",
       phone: result.phone || "-",
     }));
-
 
     const total = await LoveResult.countDocuments(query);
 

@@ -57,6 +57,8 @@
 
 
 const LoveQuestion = require("../models/loveQuestion");
+const { normalizeProfileName } = require("../utils/normalize");
+
 
 exports.calculateLoveProfile = async (answers) => {
   try {
@@ -113,12 +115,13 @@ exports.calculateLoveProfile = async (answers) => {
     }
     // Duas linguagens próximas (diferença <= 5%)
     else if (Math.abs(primary.percentage - secondary.percentage) <= 5 && primary.percentage >= 20) {
-      primaryLanguage = `${primary.language}/${secondary.language}`;
+     primaryLanguage = normalizeProfileName(`${primary.language}/${secondary.language}`);
       analysisType = "balanced_dual";
     }
     // Três linguagens equilibradas
     else if (primary.percentage <= 25 && secondary.percentage >= 18 && third.percentage >= 15) {
-      primaryLanguage = `${primary.language}/${secondary.language}/${third.language}`;
+      primaryLanguage = normalizeProfileName(`${primary.language}/${secondary.language}/${third.language}`);
+
       analysisType = "balanced_multiple";
     }
     // Linguagem moderadamente dominante

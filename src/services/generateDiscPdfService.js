@@ -67,7 +67,6 @@ function generateDiscReportPDF(data) {
       setFont(28, true, "white");
       doc.text("Relatório de Perfil DISC", margin, 30, { width: contentWidth, align: "center" });
       setFont(16, false, "white");
-      doc.text("Linguagens do Amor", margin, 70, { width: contentWidth, align: "center" });
 
       doc.fillColor(colors.accent).circle(pageWidth - 80, 40, 20).fill();
       doc.fillColor(colors.success).circle(pageWidth - 60, 80, 15).fill();
@@ -239,7 +238,7 @@ function generateDiscReportPDF(data) {
       doc.y = pageHeight - 80;
       addSeparator();
       setFont(10, false, colors.lightGray);
-      doc.text("Relatório gerado automaticamente - Linguagens do Amor", margin, doc.y, {
+      doc.text("Relatório gerado automaticamente - D.I.S.C", margin, doc.y, {
         width: contentWidth,
         align: "center"
       });
